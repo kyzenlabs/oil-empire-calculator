@@ -330,6 +330,30 @@ input[type=range]::-webkit-slider-thumb {
 }
 .gas-desc b { color: var(--text); }
 .gas-desc code { color: var(--cyan); font-family: monospace; font-size: 11px; }
+.goal-accordion { overflow: hidden; }
+.goal-acc-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  transition: background 0.14s;
+}
+.goal-acc-trigger:hover { background: rgba(255,255,255,0.03); }
+.goal-acc-chevron { transition: transform 0.22s ease; color: var(--muted); flex-shrink: 0; }
+.goal-acc-trigger[aria-expanded="true"] .goal-acc-chevron { transform: rotate(180deg); }
+.goal-acc-summary { font-size: 11px; font-weight: 500; color: var(--muted); font-family: var(--font); }
+.goal-acc-body { max-height: 0; overflow: hidden; transition: max-height 0.28s ease, opacity 0.22s ease; opacity: 0; }
+.goal-acc-body.open { max-height: 800px; opacity: 1; }
+.goal-acc-inner { padding: 0 16px 16px; border-top: 1px solid var(--border); }
+.goal-acc-divider { height: 1px; background: var(--border); }
 </style>
 </head>
 <body>
@@ -474,25 +498,59 @@ input[type=range]::-webkit-slider-thumb {
         <h1>Goals</h1>
       </div>
 
-      <div class="card">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
-          </svg>
-          Drills
+      <div class="card" style="padding:0;overflow:hidden;">
+
+        <div class="goal-accordion" id="ga-drills">
+          <button class="goal-acc-trigger" aria-expanded="false">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Drills
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="goal-acc-summary" id="ga-drills-summary"></span>
+              <svg class="goal-acc-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="goal-acc-body">
+            <div class="goal-acc-inner">
+              <div class="drill-selector" id="drillSelector"></div>
+              <div class="info-box" style="margin-top:4px;">
+                Total cost: <span class="iv" id="g-totalCost">—</span> &nbsp;|&nbsp;
+                Time to afford: <span class="iv" id="g-drillTime">—</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="drill-selector" id="drillSelector"></div>
-        <div class="info-box" style="margin-top:4px;">
-          Total cost: <span class="iv" id="g-totalCost">—</span> &nbsp;|&nbsp;
-          Time to afford: <span class="iv" id="g-drillTime">—</span>
+
+        <div class="goal-acc-divider"></div>
+
+        <div class="goal-accordion" id="ga-refineries">
+          <button class="goal-acc-trigger" aria-expanded="false">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+              Refineries
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="goal-acc-summary" id="ga-ref-summary"></span>
+              <svg class="goal-acc-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="goal-acc-body">
+            <div class="goal-acc-inner">
+              <div class="drill-selector" id="refinerySelector"></div>
+              <div class="info-box" style="margin-top:4px;">
+                Total cost: <span class="iv" id="g-refTotalCost">—</span> &nbsp;|&nbsp;
+                Time to afford: <span class="iv" id="g-refTime">—</span>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
 
       <div class="card">
         <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           Cash Goal
         </div>
         <div class="field-lbl">Goal Amount:</div>
@@ -582,7 +640,28 @@ const DRILLS = [
   { name: "Ruby Drill",              price: 85500000000, rate: 4500 },
 ];
 
-const drillCounts = Object.fromEntries(DRILLS.map(d => [d.name, 0]));
+const REFINERIES = [
+  { name: "Basic Refinery",        price: 500,          storage: 50      },
+  { name: "Enhanced Refinery",     price: 2500,         storage: 150     },
+  { name: "Reinforced Refinery",   price: 6250,         storage: 250     },
+  { name: "Advanced Refinery",     price: 20000,        storage: 500     },
+  { name: "Plasma Refinery",       price: 50000,        storage: 800     },
+  { name: "Industrial Refinery",   price: 200000,       storage: 1500    },
+  { name: "Energy Refinery",       price: 700000,       storage: 2000    },
+  { name: "Mega Refinery",         price: 3000000,      storage: 5000    },
+  { name: "Quantum Refinery",      price: 5000000,      storage: 7500    },
+  { name: "Ice Refinery",          price: 8000000,      storage: 12500   },
+  { name: "Hell Refinery",         price: 16000000,     storage: 20000   },
+  { name: "Mega Quantum Refinery", price: 90000000,     storage: 100000  },
+  { name: "Mega Energy Refinery",  price: 150000000,    storage: 150000  },
+  { name: "Lava Refinery",         price: 360000000,    storage: 275000  },
+  { name: "Crystal Refinery",      price: 600000000,    storage: 400000  },
+  { name: "Diamond Refinery",      price: 5000000000,   storage: 1000000 },
+  { name: "Ruby Refinery",         price: 50000000000,  storage: 5000000 },
+];
+
+const drillCounts    = Object.fromEntries(DRILLS.map(d => [d.name, 0]));
+const refineryCounts = Object.fromEntries(REFINERIES.map(r => [r.name, 0]));
 
 function fmtNum(n) {
   if (!isFinite(n) || n === null) return '—';
@@ -684,12 +763,13 @@ function loadCfg() {
     if (s.cash  !== undefined) cfg.cash  = s.cash;
     if (s.cpu   !== undefined) cfg.cpu   = Math.min(15, Math.max(1, s.cpu));
     if (s.boost !== undefined) cfg.boost = Math.min(285, Math.max(100, s.boost));
-    if (s.drillCounts) Object.assign(drillCounts, s.drillCounts);
+    if (s.drillCounts)    Object.assign(drillCounts, s.drillCounts);
+    if (s.refineryCounts) Object.assign(refineryCounts, s.refineryCounts);
   } catch(_) {}
 }
 
 function saveCfg() {
-  try { localStorage.setItem(KEY, JSON.stringify({ ...cfg, drillCounts })); } catch(_) {}
+  try { localStorage.setItem(KEY, JSON.stringify({ ...cfg, drillCounts, refineryCounts })); } catch(_) {}
 }
 
 function psRecalc() {
@@ -797,17 +877,95 @@ function buildDrillSelector() {
   });
 }
 
-function goalsRecalc() {
-  const selections = DRILLS.map(d => ({ name: d.name, count: drillCounts[d.name] || 0 }));
-  const { totalCost, timeLeft } = calcDrillAfford(cfg.pps, cfg.cash, cfg.cpu, cfg.boost, selections);
-  const anyDrills = selections.some(s => s.count > 0);
-  setText('g-totalCost', anyDrills ? fmtNum(totalCost) : '—');
+function buildRefinerySelector() {
+  const container = document.getElementById('refinerySelector');
+  container.innerHTML = '';
+  REFINERIES.forEach(ref => {
+    const row = document.createElement('div');
+    row.className = 'drill-row';
+    row.innerHTML = `
+      <div class="drill-info">
+        <div class="drill-name">${ref.name}</div>
+        <div class="drill-price">${fmtNum(ref.price)} &nbsp;·&nbsp; ${ref.storage.toLocaleString()} storage</div>
+      </div>
+      <div class="drill-counter">
+        <button class="cnt-btn" data-ref="${ref.name}" data-dir="-1">−</button>
+        <span class="cnt-val" id="rcnt-${ref.name.replace(/\s/g, '_')}">${refineryCounts[ref.name]}</span>
+        <button class="cnt-btn" data-ref="${ref.name}" data-dir="1">+</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
 
-  const timeEl = document.getElementById('g-drillTime');
-  if (timeEl) {
-    timeEl.textContent = anyDrills ? timeLeft : '—';
-    timeEl.className   = 'iv' + (timeLeft === 'Complete!' ? ' affordable' : '');
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('.cnt-btn');
+    if (!btn || !btn.dataset.ref) return;
+    const name = btn.dataset.ref;
+    const dir  = parseInt(btn.dataset.dir);
+    refineryCounts[name] = Math.max(0, (refineryCounts[name] || 0) + dir);
+    const valEl = document.getElementById('rcnt-' + name.replace(/\s/g, '_'));
+    if (valEl) valEl.textContent = refineryCounts[name];
+    saveCfg();
+    goalsRecalc();
+  });
+}
+
+
+function initGoalAccordion(id) {
+  const el      = document.getElementById(id);
+  const trigger = el.querySelector('.goal-acc-trigger');
+  const body    = el.querySelector('.goal-acc-body');
+  trigger.addEventListener('click', () => {
+    const open = body.classList.toggle('open');
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+function goalsRecalc() {
+  const drillSelections = DRILLS.map(d => ({ name: d.name, count: drillCounts[d.name] || 0 }));
+  const { totalCost: drillCost, timeLeft: drillTime } = calcDrillAfford(cfg.pps, cfg.cash, cfg.cpu, cfg.boost, drillSelections);
+  const anyDrills = drillSelections.some(s => s.count > 0);
+  setText('g-totalCost', anyDrills ? fmtNum(drillCost) : '—');
+
+  const drillTimeEl = document.getElementById('g-drillTime');
+  if (drillTimeEl) {
+    drillTimeEl.textContent = anyDrills ? drillTime : '—';
+    drillTimeEl.className   = 'iv' + (drillTime === 'Complete!' ? ' affordable' : '');
   }
+
+  const drillTotal = drillSelections.reduce((sum, s) => sum + s.count, 0);
+  const drillSummaryEl = document.getElementById('ga-drills-summary');
+  if (drillSummaryEl) drillSummaryEl.textContent = drillTotal > 0 ? drillTotal + ' selected' : '';
+
+  const refSelections = REFINERIES.map(r => ({ name: r.name, count: refineryCounts[r.name] || 0, price: r.price }));
+  const anyRefineries = refSelections.some(s => s.count > 0);
+  let refTotal = 0;
+  refSelections.forEach(s => { refTotal += s.price * s.count; });
+
+  const refTimeEl = document.getElementById('g-refTime');
+  if (anyRefineries) {
+    setText('g-refTotalCost', fmtNum(refTotal));
+    const { cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
+    if (refTimeEl) {
+      if (cashPerHr <= 0) {
+        refTimeEl.textContent = '—'; refTimeEl.className = 'iv';
+      } else {
+        const remaining = refTotal - cfg.cash;
+        if (remaining <= 0) {
+          refTimeEl.textContent = 'Complete!'; refTimeEl.className = 'iv affordable';
+        } else {
+          refTimeEl.textContent = formatDuration(remaining / cashPerHr); refTimeEl.className = 'iv';
+        }
+      }
+    }
+  } else {
+    setText('g-refTotalCost', '—');
+    if (refTimeEl) { refTimeEl.textContent = '—'; refTimeEl.className = 'iv'; }
+  }
+
+  const refCount = refSelections.reduce((sum, s) => sum + s.count, 0);
+  const refSummaryEl = document.getElementById('ga-ref-summary');
+  if (refSummaryEl) refSummaryEl.textContent = refCount > 0 ? refCount + ' selected' : '';
 
   const goalAmt  = parseLarge(document.getElementById('g-goalAmt')?.value);
   const goalTime = calcGoalTime(cfg.pps, cfg.cash, goalAmt, cfg.cpu, cfg.boost);
@@ -820,6 +978,9 @@ function goalsRecalc() {
 
 function goalsInit() {
   buildDrillSelector();
+  buildRefinerySelector();
+  initGoalAccordion('ga-drills');
+  initGoalAccordion('ga-refineries');
   document.getElementById('g-goalAmt').addEventListener('input', goalsRecalc);
   goalsRecalc();
 }
