@@ -32,22 +32,88 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
 .titlebar-dot{width:11px;height:11px;border-radius:50%;background:var(--dim);}
 .titlebar-name{font-size:12px;color:var(--muted);margin-left:6px;}
 .app{display:flex;flex:1;overflow:hidden;}
-.sidebar{width:var(--sidebar-w);background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
-.sidebar-header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.sidebar-title{font-size:15px;font-weight:600;color:var(--text2);}
-.hamburger{display:flex;flex-direction:column;gap:4px;cursor:pointer;padding:4px;}
-.hamburger span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px;}
-.nav-list{padding:8px;flex:1;display:flex;flex-direction:column;gap:2px;}
-.nav-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.14s;border:1px solid transparent;}
+
+.sidebar{
+  width:var(--sidebar-w);
+  background:var(--sidebar);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+  transition:width 0.22s ease;
+}
+.sidebar.collapsed{width:52px;}
+.sidebar-header{
+  height:52px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;border-bottom:1px solid var(--border);flex-shrink:0;min-width:0;
+}
+.sidebar-title{font-size:15px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;transition:opacity 0.15s,width 0.2s;}
+.sidebar.collapsed .sidebar-title{opacity:0;width:0;pointer-events:none;}
+.hamburger{display:flex;flex-direction:column;gap:4px;cursor:pointer;padding:4px;flex-shrink:0;}
+.hamburger span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px;transition:transform 0.2s,opacity 0.2s;}
+
+.nav-list{padding:8px;flex:1;display:flex;flex-direction:column;gap:2px;overflow:hidden;}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:9px 12px;border-radius:7px;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--muted);
+  transition:all 0.14s;border:1px solid transparent;
+  white-space:nowrap;overflow:hidden;
+}
 .nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:0.5;transition:opacity 0.14s;}
+.nav-item span{transition:opacity 0.15s,max-width 0.2s;max-width:160px;overflow:hidden;}
+.sidebar.collapsed .nav-list{padding:6px 5px;}
+.sidebar.collapsed .sidebar-bottom{padding:6px 5px;}
+.sidebar.collapsed .nav-item{
+  justify-content:center;
+  padding:0;
+  width:42px;height:42px;
+  border-radius:8px;
+  gap:0;
+  flex-shrink:0;
+  align-self:center;
+}
+.sidebar.collapsed .nav-item span{opacity:0;max-width:0;pointer-events:none;}
 .nav-item:hover{background:rgba(255,255,255,0.05);color:var(--text);}
 .nav-item:hover svg{opacity:0.8;}
 .nav-item.active{background:var(--blue);color:#fff;border-color:rgba(255,255,255,0.1);}
 .nav-item.active svg{opacity:1;}
 .sidebar-bottom{padding:8px;border-top:1px solid var(--border);}
+.sidebar.collapsed .sidebar-header{justify-content:center;padding:0;}
+
 .main{flex:1;overflow-y:auto;padding:26px 30px 40px;}
 .main::-webkit-scrollbar{width:5px;}
 .main::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px;}
+
+/* ── Mobile bottom nav ── */
+.mobile-nav{
+  display:none;
+  height:56px;
+  background:var(--sidebar);
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.mobile-nav-inner{
+  display:flex;
+  height:100%;
+  align-items:stretch;
+}
+.mob-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;color:var(--muted);font-size:9px;font-weight:500;
+  transition:color 0.13s;border:none;background:none;font-family:var(--font);
+  padding:0;
+}
+.mob-item svg{width:20px;height:20px;opacity:0.5;transition:opacity 0.13s;}
+.mob-item.active{color:var(--blue-hi);}
+.mob-item.active svg{opacity:1;}
+.mob-item:hover{color:var(--text);}
+
+@media (max-width:600px){
+  .sidebar{display:none;}
+  .mobile-nav{display:block;}
+  .app{flex-direction:column;}
+  .main{padding:18px 16px 24px;order:-1;}
+  .titlebar-name{font-size:11px;}
+}
 .page-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
 .page-hdr svg{width:26px;height:26px;flex-shrink:0;}
 .page-hdr h1{font-size:22px;font-weight:700;color:var(--text2);}
@@ -294,6 +360,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             </div>
           </div>
         </div>
+        <div class="goal-acc-divider"></div>
+        <div class="goal-accordion" id="ga-decorations">
+          <button class="goal-acc-trigger" aria-expanded="false">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span data-i18n="decorations">Decorations</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="goal-acc-summary" id="ga-dec-summary"></span>
+              <svg class="goal-acc-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="goal-acc-body">
+            <div class="goal-acc-inner">
+              <div class="drill-selector" id="decorSelector"></div>
+              <div class="info-box" style="margin-top:4px;">
+                <span data-i18n="total_cost">Total cost:</span> <span class="iv" id="g-decTotalCost">—</span> &nbsp;|&nbsp;
+                <span data-i18n="time_afford">Time to afford:</span> <span class="iv" id="g-decTime">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -393,6 +481,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   </main>
 </div>
 
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mob-item active" data-tab="production">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+      <span data-i18n="nav_production">Stats</span>
+    </button>
+    <button class="mob-item" data-tab="goals">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/></svg>
+      <span data-i18n="nav_goals">Goals</span>
+    </button>
+    <button class="mob-item" data-tab="layout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span data-i18n="nav_layout">Layout</span>
+    </button>
+    <button class="mob-item" data-tab="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span data-i18n="nav_settings">Settings</span>
+    </button>
+    <button class="mob-item" data-tab="about">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span data-i18n="nav_about">About</span>
+    </button>
+  </div>
+</div>
+
 <script>
 const DRILLS = [
   { name_key:"drill_basic",       name:"Basic Drill",             price:500,         rate:1    },
@@ -440,6 +553,23 @@ const REFINERIES = [
 const drillCounts    = Object.fromEntries(DRILLS.map(d => [d.name, 0]));
 const refineryCounts = Object.fromEntries(REFINERIES.map(r => [r.name, 0]));
 
+const DECORATIONS = [
+  { name_key:"dec_radio",    name:"Radio Tower",         price:1000000,      rate:0,    income:false },
+  { name_key:"dec_wind_b",   name:"Basic Wind Turbine",  price:900000,       rate:250,  income:true  },
+  { name_key:"dec_wind_m",   name:"Medium Wind Turbine", price:5400000,      rate:1000, income:true  },
+  { name_key:"dec_trees",    name:"Trees",               price:10,           rate:0,    income:false },
+  { name_key:"dec_lamp",     name:"Light Pole",          price:3000,         rate:0,    income:false },
+  { name_key:"dec_flowers",  name:"Potted Flowers",      price:5000,         rate:0,    income:false },
+  { name_key:"dec_contain",  name:"Container Stack",     price:10000,        rate:0,    income:false },
+  { name_key:"dec_arch",     name:"Garden Arch",         price:100000,       rate:0,    income:false },
+  { name_key:"dec_duck",     name:"Duck Statue",         price:10000000,     rate:0,    income:false },
+  { name_key:"dec_fountain", name:"Fountain",            price:1000000000,   rate:0,    income:false },
+  { name_key:"dec_oil_mon",  name:"Oil Monument",        price:100000000000, rate:0,    income:false },
+  { name_key:"dec_throne",   name:"Throne",              price:500000000000, rate:0,    income:false },
+];
+
+const decorCounts = Object.fromEntries(DECORATIONS.map(d => [d.name, 0]));
+
 const LANGS = {
   en: {
     nav_production:"Production Stats", nav_goals:"Goals", nav_layout:"Layout Designer",
@@ -453,7 +583,7 @@ const LANGS = {
     gas_amount:"Gas Amount:", total_profit:"Total Profit:",
     gas_desc:"Enter the amount of gas (petrol units) you have collected or plan to sell. This multiplies that quantity by your configured <b>Cash per Unit</b> and <b>Boost multiplier</b> to show the total cash you'll receive. Supports shorthand like <code>100k</code>, <code>2.5M</code>, or comma-separated numbers.",
     more_calcs:"More calculations coming soon…",
-    goals_title:"Goals", drills:"Drills", refineries:"Refineries",
+    goals_title:"Goals", drills:"Drills", refineries:"Refineries", decorations:"Decorations",
     total_cost:"Total cost:", time_afford:"Time to afford:", selected:"selected",
     cash_goal:"Cash Goal", goal_amount:"Goal Amount:", time_to_goal:"Time to goal:",
     nav_layout:"Layout Designer", coming_soon:"Coming Soon",
@@ -465,7 +595,7 @@ const LANGS = {
     feat_1:"Production statistics and rates", feat_2:"Drill affordability calculator",
     feat_3:"Cash goal tracker", feat_4:"Gas profit calculator",
     feat_5:"Configurable sale price and totem boost multiplier", feat_6:"Layout designer (coming soon)",
-    storage:"storage", complete:"Complete!",
+    storage:"storage", complete:"Complete!", decor_only:"decor only", dec_radio_desc:"Alerts when gas price changes",
     pps_ph:"e.g. 277,005 or 277005", cash_ph:"e.g. 16.9B or 16,900,000,000",
     gas_ph:"e.g. 100k or 2,500,000", goal_ph:"e.g. 1B",
     rate_unit:"/s",
@@ -482,6 +612,10 @@ const LANGS = {
     ref_ice:"Ice Refinery", ref_hell:"Hell Refinery", ref_mega_q:"Mega Quantum Refinery",
     ref_mega_e:"Mega Energy Refinery", ref_lava:"Lava Refinery", ref_crystal:"Crystal Refinery",
     ref_diamond:"Diamond Refinery", ref_ruby:"Ruby Refinery",
+    dec_radio:"Radio Tower", dec_wind_b:"Basic Wind Turbine", dec_wind_m:"Medium Wind Turbine",
+    dec_trees:"Trees", dec_lamp:"Light Pole", dec_flowers:"Potted Flowers",
+    dec_contain:"Container Stack", dec_arch:"Garden Arch", dec_duck:"Duck Statue",
+    dec_fountain:"Fountain", dec_oil_mon:"Oil Monument", dec_throne:"Throne",
   },
   es: {
     nav_production:"Estadísticas", nav_goals:"Metas", nav_layout:"Diseñador",
@@ -495,7 +629,7 @@ const LANGS = {
     gas_amount:"Cantidad de gas:", total_profit:"Ganancia total:",
     gas_desc:"Ingresa la cantidad de gas que tienes o planeas vender. Multiplica esa cantidad por tu <b>Dinero por Unidad</b> y tu <b>Multiplicador</b> para mostrar el total. Admite abreviaturas como <code>100k</code>, <code>2.5M</code>, o números con comas.",
     more_calcs:"Más cálculos próximamente…",
-    goals_title:"Metas", drills:"Taladros", refineries:"Refinerías",
+    goals_title:"Metas", drills:"Taladros", refineries:"Refinerías", decorations:"Decoraciones",
     total_cost:"Costo total:", time_afford:"Tiempo para pagar:", selected:"seleccionados",
     cash_goal:"Meta de dinero", goal_amount:"Cantidad meta:", time_to_goal:"Tiempo para llegar:",
     coming_soon:"Próximamente",
@@ -507,7 +641,7 @@ const LANGS = {
     feat_1:"Estadísticas de producción", feat_2:"Calculadora de taladros",
     feat_3:"Seguimiento de metas", feat_4:"Calculadora de ganancia de gas",
     feat_5:"Precio de venta y multiplicador configurables", feat_6:"Diseñador de base (próximamente)",
-    storage:"almacenamiento", complete:"¡Completo!", rate_unit:"/s",
+    storage:"almacenamiento", complete:"¡Completo!", decor_only:"solo decoración", dec_radio_desc:"Alerta cuando cambia el precio del gas", rate_unit:"/s",
     pps_ph:"p.ej. 277,005", cash_ph:"p.ej. 16.9B", gas_ph:"p.ej. 100k", goal_ph:"p.ej. 1B",
     drill_basic:"Taladro Básico", drill_strong:"Taladro Fuerte", drill_enhanced:"Taladro Mejorado",
     drill_speed:"Taladro Veloz", drill_reinforced:"Taladro Reforzado", drill_industrial:"Taladro Industrial",
@@ -522,6 +656,10 @@ const LANGS = {
     ref_ice:"Refinería de Hielo", ref_hell:"Refinería Infernal", ref_mega_q:"Mega Refinería Cuántica",
     ref_mega_e:"Mega Refinería de Energía", ref_lava:"Refinería de Lava", ref_crystal:"Refinería de Cristal",
     ref_diamond:"Refinería de Diamante", ref_ruby:"Refinería de Rubí",
+    dec_radio:"Torre de Radio", dec_wind_b:"Aerogenerador Básico", dec_wind_m:"Aerogenerador Mediano",
+    dec_trees:"Árboles", dec_lamp:"Poste de Luz", dec_flowers:"Flores en Maceta",
+    dec_contain:"Pila de Contenedores", dec_arch:"Arco del Jardín", dec_duck:"Estatua de Pato",
+    dec_fountain:"Fuente", dec_oil_mon:"Monumento al Petróleo", dec_throne:"Trono",
   },
   fr: {
     nav_production:"Statistiques", nav_goals:"Objectifs", nav_layout:"Concepteur",
@@ -535,7 +673,7 @@ const LANGS = {
     gas_amount:"Quantité de gaz:", total_profit:"Profit total:",
     gas_desc:"Entrez la quantité de gaz collectée ou à vendre. Multipliée par votre <b>Argent par Unité</b> et votre <b>Multiplicateur</b>. Prend en charge les abréviations comme <code>100k</code>, <code>2.5M</code>.",
     more_calcs:"Plus de calculs bientôt…",
-    goals_title:"Objectifs", drills:"Foreuses", refineries:"Raffineries",
+    goals_title:"Objectifs", drills:"Foreuses", refineries:"Raffineries", decorations:"Décorations",
     total_cost:"Coût total:", time_afford:"Temps pour payer:", selected:"sélectionnés",
     cash_goal:"Objectif financier", goal_amount:"Montant cible:", time_to_goal:"Temps restant:",
     coming_soon:"Bientôt disponible",
@@ -547,7 +685,7 @@ const LANGS = {
     feat_1:"Statistiques de production", feat_2:"Calculateur de foreuses",
     feat_3:"Suivi des objectifs", feat_4:"Calculateur de profit de gaz",
     feat_5:"Prix de vente et multiplicateur configurables", feat_6:"Concepteur de base (bientôt)",
-    storage:"stockage", complete:"Complété!", rate_unit:"/s",
+    storage:"stockage", complete:"Complété!", decor_only:"déco seulement", dec_radio_desc:"Alerte quand le prix du gaz change", rate_unit:"/s",
     pps_ph:"ex. 277 005", cash_ph:"ex. 16,9B", gas_ph:"ex. 100k", goal_ph:"ex. 1B",
     drill_basic:"Foreuse Basique", drill_strong:"Foreuse Puissante", drill_enhanced:"Foreuse Améliorée",
     drill_speed:"Foreuse Rapide", drill_reinforced:"Foreuse Renforcée", drill_industrial:"Foreuse Industrielle",
@@ -562,6 +700,10 @@ const LANGS = {
     ref_ice:"Raffinerie Glace", ref_hell:"Raffinerie Infernale", ref_mega_q:"Méga Raffinerie Quantique",
     ref_mega_e:"Méga Raffinerie Énergie", ref_lava:"Raffinerie Lave", ref_crystal:"Raffinerie Cristal",
     ref_diamond:"Raffinerie Diamant", ref_ruby:"Raffinerie Rubis",
+    dec_radio:"Tour Radio", dec_wind_b:"Éolienne Basique", dec_wind_m:"Éolienne Moyenne",
+    dec_trees:"Arbres", dec_lamp:"Lampadaire", dec_flowers:"Fleurs en Pot",
+    dec_contain:"Pile de Conteneurs", dec_arch:"Arche de Jardin", dec_duck:"Statue de Canard",
+    dec_fountain:"Fontaine", dec_oil_mon:"Monument au Pétrole", dec_throne:"Trône",
   },
   de: {
     nav_production:"Produktion", nav_goals:"Ziele", nav_layout:"Layout-Designer",
@@ -575,7 +717,7 @@ const LANGS = {
     gas_amount:"Gasmenge:", total_profit:"Gesamtgewinn:",
     gas_desc:"Gib die Gasmenge ein, die du gesammelt hast oder verkaufen möchtest. Multipliziert mit <b>Geld pro Einheit</b> und <b>Multiplikator</b>. Unterstützt Abkürzungen wie <code>100k</code>, <code>2,5M</code>.",
     more_calcs:"Weitere Berechnungen demnächst…",
-    goals_title:"Ziele", drills:"Bohrer", refineries:"Raffinerien",
+    goals_title:"Ziele", drills:"Bohrer", refineries:"Raffinerien", decorations:"Dekorationen",
     total_cost:"Gesamtkosten:", time_afford:"Zeit zum Leisten:", selected:"ausgewählt",
     cash_goal:"Geldziel", goal_amount:"Zielbetrag:", time_to_goal:"Verbleibende Zeit:",
     coming_soon:"Demnächst",
@@ -587,7 +729,7 @@ const LANGS = {
     feat_1:"Produktionsstatistiken", feat_2:"Bohrer-Rechner",
     feat_3:"Zieltracker", feat_4:"Gasgewinn-Rechner",
     feat_5:"Konfigurierbarer Verkaufspreis und Boost", feat_6:"Layout-Designer (demnächst)",
-    storage:"Speicher", complete:"Abgeschlossen!", rate_unit:"/s",
+    storage:"Speicher", complete:"Abgeschlossen!", decor_only:"nur Deko", dec_radio_desc:"Warnt bei Gaspreisänderungen", rate_unit:"/s",
     pps_ph:"z.B. 277.005", cash_ph:"z.B. 16,9B", gas_ph:"z.B. 100k", goal_ph:"z.B. 1B",
     drill_basic:"Basisbohrer", drill_strong:"Starker Bohrer", drill_enhanced:"Verbesserter Bohrer",
     drill_speed:"Schnellbohrer", drill_reinforced:"Verstärkter Bohrer", drill_industrial:"Industriebohrer",
@@ -602,6 +744,10 @@ const LANGS = {
     ref_ice:"Eisraffinerie", ref_hell:"Höllenraffinerie", ref_mega_q:"Mega-Quantenraffinerie",
     ref_mega_e:"Mega-Energieraffinerie", ref_lava:"Lavaraffinerie", ref_crystal:"Kristallraffinerie",
     ref_diamond:"Diamantraffinerie", ref_ruby:"Rubinraffinerie",
+    dec_radio:"Funkturm", dec_wind_b:"Basis-Windrad", dec_wind_m:"Mittel-Windrad",
+    dec_trees:"Bäume", dec_lamp:"Laternenpfahl", dec_flowers:"Blumentöpfe",
+    dec_contain:"Containerstapel", dec_arch:"Gartenbogen", dec_duck:"Entenstatue",
+    dec_fountain:"Brunnen", dec_oil_mon:"Öl-Monument", dec_throne:"Thron",
   },
   pt: {
     nav_production:"Produção", nav_goals:"Objetivos", nav_layout:"Designer",
@@ -615,7 +761,7 @@ const LANGS = {
     gas_amount:"Quantidade de gás:", total_profit:"Lucro total:",
     gas_desc:"Insira a quantidade de gás coletada ou a vender. Multiplica pelo <b>Dinheiro por Unidade</b> e <b>Multiplicador</b>. Suporta abreviações como <code>100k</code>, <code>2,5M</code>.",
     more_calcs:"Mais cálculos em breve…",
-    goals_title:"Objetivos", drills:"Brocas", refineries:"Refinarias",
+    goals_title:"Objetivos", drills:"Brocas", refineries:"Refinarias", decorations:"Decorações",
     total_cost:"Custo total:", time_afford:"Tempo para pagar:", selected:"selecionados",
     cash_goal:"Meta de dinheiro", goal_amount:"Valor da meta:", time_to_goal:"Tempo restante:",
     coming_soon:"Em breve",
@@ -627,7 +773,7 @@ const LANGS = {
     feat_1:"Estatísticas de produção", feat_2:"Calculadora de brocas",
     feat_3:"Rastreador de metas", feat_4:"Calculadora de lucro de gás",
     feat_5:"Preço e multiplicador configuráveis", feat_6:"Designer de base (em breve)",
-    storage:"armazenamento", complete:"Completo!", rate_unit:"/s",
+    storage:"armazenamento", complete:"Completo!", decor_only:"só decoração", dec_radio_desc:"Alerta quando o preço do gás muda", rate_unit:"/s",
     pps_ph:"ex. 277.005", cash_ph:"ex. 16,9B", gas_ph:"ex. 100k", goal_ph:"ex. 1B",
     drill_basic:"Broca Básica", drill_strong:"Broca Forte", drill_enhanced:"Broca Melhorada",
     drill_speed:"Broca Veloz", drill_reinforced:"Broca Reforçada", drill_industrial:"Broca Industrial",
@@ -642,6 +788,10 @@ const LANGS = {
     ref_ice:"Refinaria de Gelo", ref_hell:"Refinaria Infernal", ref_mega_q:"Mega Refinaria Quântica",
     ref_mega_e:"Mega Refinaria de Energia", ref_lava:"Refinaria de Lava", ref_crystal:"Refinaria de Cristal",
     ref_diamond:"Refinaria de Diamante", ref_ruby:"Refinaria de Rubi",
+    dec_radio:"Torre de Rádio", dec_wind_b:"Turbina Eólica Básica", dec_wind_m:"Turbina Eólica Média",
+    dec_trees:"Árvores", dec_lamp:"Poste de Luz", dec_flowers:"Flores em Vaso",
+    dec_contain:"Pilha de Contêineres", dec_arch:"Arco de Jardim", dec_duck:"Estátua de Pato",
+    dec_fountain:"Fonte", dec_oil_mon:"Monumento ao Petróleo", dec_throne:"Trono",
   },
   zh: {
     nav_production:"生产统计", nav_goals:"目标", nav_layout:"布局设计",
@@ -655,7 +805,7 @@ const LANGS = {
     gas_amount:"天然气数量:", total_profit:"总利润:",
     gas_desc:"输入您收集或计划出售的天然气数量。乘以您的<b>每单位现金</b>和<b>加速倍率</b>。支持如<code>100k</code>、<code>2.5M</code>等简写。",
     more_calcs:"更多计算即将推出…",
-    goals_title:"目标", drills:"钻头", refineries:"炼油厂",
+    goals_title:"目标", drills:"钻头", refineries:"炼油厂", decorations:"装饰品",
     total_cost:"总费用:", time_afford:"支付时间:", selected:"已选",
     cash_goal:"现金目标", goal_amount:"目标金额:", time_to_goal:"剩余时间:",
     coming_soon:"即将推出",
@@ -667,7 +817,7 @@ const LANGS = {
     feat_1:"生产统计", feat_2:"钻头计算器",
     feat_3:"现金目标追踪", feat_4:"天然气利润计算器",
     feat_5:"可配置售价和加速倍率", feat_6:"布局设计器（即将推出）",
-    storage:"储量", complete:"已完成！", rate_unit:"/秒",
+    storage:"储量", complete:"已完成！", decor_only:"仅装饰", dec_radio_desc:"气体价格变化时提醒", rate_unit:"/秒",
     pps_ph:"例如 277005", cash_ph:"例如 16.9B", gas_ph:"例如 100k", goal_ph:"例如 1B",
     drill_basic:"基础钻头", drill_strong:"强力钻头", drill_enhanced:"增强钻头",
     drill_speed:"速度钻头", drill_reinforced:"加固钻头", drill_industrial:"工业钻头",
@@ -682,6 +832,10 @@ const LANGS = {
     ref_ice:"冰炼油厂", ref_hell:"地狱炼油厂", ref_mega_q:"超级量子炼油厂",
     ref_mega_e:"超级能源炼油厂", ref_lava:"熔岩炼油厂", ref_crystal:"水晶炼油厂",
     ref_diamond:"钻石炼油厂", ref_ruby:"红宝石炼油厂",
+    dec_radio:"无线电塔", dec_wind_b:"基础风力涡轮", dec_wind_m:"中型风力涡轮",
+    dec_trees:"树木", dec_lamp:"路灯", dec_flowers:"盆栽花",
+    dec_contain:"集装箱堆", dec_arch:"花园拱门", dec_duck:"鸭子雕像",
+    dec_fountain:"喷泉", dec_oil_mon:"石油纪念碑", dec_throne:"王座",
   },
   ja: {
     nav_production:"生産統計", nav_goals:"目標", nav_layout:"レイアウト",
@@ -695,7 +849,7 @@ const LANGS = {
     gas_amount:"ガス量:", total_profit:"総利益:",
     gas_desc:"収集または売却予定のガス量を入力してください。<b>単位あたりの現金</b>と<b>ブースト</b>で乗算します。<code>100k</code>、<code>2.5M</code>などの略語に対応。",
     more_calcs:"計算はもっと追加予定…",
-    goals_title:"目標", drills:"ドリル", refineries:"精製所",
+    goals_title:"目標", drills:"ドリル", refineries:"精製所", decorations:"デコレーション",
     total_cost:"合計費用:", time_afford:"購入までの時間:", selected:"選択済み",
     cash_goal:"現金目標", goal_amount:"目標額:", time_to_goal:"残り時間:",
     coming_soon:"近日公開",
@@ -707,7 +861,7 @@ const LANGS = {
     feat_1:"生産統計", feat_2:"ドリル計算機",
     feat_3:"現金目標トラッカー", feat_4:"ガス利益計算機",
     feat_5:"販売価格とブーストの設定", feat_6:"レイアウトデザイナー（近日公開）",
-    storage:"ストレージ", complete:"完了！", rate_unit:"/秒",
+    storage:"ストレージ", complete:"完了！", decor_only:"装飾のみ", dec_radio_desc:"ガス価格変動時に通知", rate_unit:"/秒",
     pps_ph:"例: 277005", cash_ph:"例: 16.9B", gas_ph:"例: 100k", goal_ph:"例: 1B",
     drill_basic:"基本ドリル", drill_strong:"強力ドリル", drill_enhanced:"強化ドリル",
     drill_speed:"高速ドリル", drill_reinforced:"強化ドリル", drill_industrial:"産業ドリル",
@@ -722,6 +876,10 @@ const LANGS = {
     ref_ice:"氷精製所", ref_hell:"地獄精製所", ref_mega_q:"メガ量子精製所",
     ref_mega_e:"メガエネルギー精製所", ref_lava:"溶岩精製所", ref_crystal:"クリスタル精製所",
     ref_diamond:"ダイヤモンド精製所", ref_ruby:"ルビー精製所",
+    dec_radio:"ラジオタワー", dec_wind_b:"基本風力タービン", dec_wind_m:"中型風力タービン",
+    dec_trees:"木々", dec_lamp:"街灯", dec_flowers:"鉢植えの花",
+    dec_contain:"コンテナスタック", dec_arch:"庭のアーチ", dec_duck:"アヒルの像",
+    dec_fountain:"噴水", dec_oil_mon:"石油記念碑", dec_throne:"王座",
   },
   ko: {
     nav_production:"생산 통계", nav_goals:"목표", nav_layout:"레이아웃",
@@ -735,7 +893,7 @@ const LANGS = {
     gas_amount:"가스 양:", total_profit:"총 수익:",
     gas_desc:"수집하거나 판매할 가스 양을 입력하세요. <b>단위당 현금</b>과 <b>부스트</b>를 곱하여 총 수익을 보여줍니다. <code>100k</code>, <code>2.5M</code> 등의 약어를 지원합니다.",
     more_calcs:"더 많은 계산 곧 출시…",
-    goals_title:"목표", drills:"드릴", refineries:"정제소",
+    goals_title:"목표", drills:"드릴", refineries:"정제소", decorations:"장식품",
     total_cost:"총 비용:", time_afford:"구매까지 시간:", selected:"선택됨",
     cash_goal:"현금 목표", goal_amount:"목표 금액:", time_to_goal:"남은 시간:",
     coming_soon:"출시 예정",
@@ -747,7 +905,7 @@ const LANGS = {
     feat_1:"생산 통계", feat_2:"드릴 계산기",
     feat_3:"현금 목표 추적", feat_4:"가스 수익 계산기",
     feat_5:"판매 가격 및 부스트 설정 가능", feat_6:"레이아웃 디자이너 (출시 예정)",
-    storage:"저장소", complete:"완료!", rate_unit:"/초",
+    storage:"저장소", complete:"완료!", decor_only:"장식 전용", dec_radio_desc:"가스 가격 변동 시 알림", rate_unit:"/초",
     pps_ph:"예: 277005", cash_ph:"예: 16.9B", gas_ph:"예: 100k", goal_ph:"예: 1B",
     drill_basic:"기본 드릴", drill_strong:"강력 드릴", drill_enhanced:"강화 드릴",
     drill_speed:"속도 드릴", drill_reinforced:"보강 드릴", drill_industrial:"산업 드릴",
@@ -762,6 +920,10 @@ const LANGS = {
     ref_ice:"아이스 정제소", ref_hell:"지옥 정제소", ref_mega_q:"메가 양자 정제소",
     ref_mega_e:"메가 에너지 정제소", ref_lava:"용암 정제소", ref_crystal:"크리스탈 정제소",
     ref_diamond:"다이아몬드 정제소", ref_ruby:"루비 정제소",
+    dec_radio:"라디오 타워", dec_wind_b:"기본 풍력 터빈", dec_wind_m:"중형 풍력 터빈",
+    dec_trees:"나무", dec_lamp:"가로등", dec_flowers:"화분",
+    dec_contain:"컨테이너 스택", dec_arch:"정원 아치", dec_duck:"오리 동상",
+    dec_fountain:"분수", dec_oil_mon:"석유 기념비", dec_throne:"왕좌",
   },
   ru: {
     nav_production:"Производство", nav_goals:"Цели", nav_layout:"Дизайнер",
@@ -775,7 +937,7 @@ const LANGS = {
     gas_amount:"Количество газа:", total_profit:"Общая прибыль:",
     gas_desc:"Введите количество газа для продажи. Умножается на <b>Деньги за единицу</b> и <b>Множитель</b>. Поддерживаются сокращения: <code>100k</code>, <code>2.5M</code>.",
     more_calcs:"Больше расчётов скоро…",
-    goals_title:"Цели", drills:"Буровые", refineries:"Заводы",
+    goals_title:"Цели", drills:"Буровые", refineries:"Заводы", decorations:"Декорации",
     total_cost:"Общая стоимость:", time_afford:"Время до покупки:", selected:"выбрано",
     cash_goal:"Цель по деньгам", goal_amount:"Целевая сумма:", time_to_goal:"Оставшееся время:",
     coming_soon:"Скоро",
@@ -787,7 +949,7 @@ const LANGS = {
     feat_1:"Статистика производства", feat_2:"Расчёт буровых",
     feat_3:"Отслеживание целей", feat_4:"Расчёт прибыли от газа",
     feat_5:"Настраиваемая цена и множитель", feat_6:"Дизайнер базы (скоро)",
-    storage:"хранилище", complete:"Готово!", rate_unit:"/с",
+    storage:"хранилище", complete:"Готово!", decor_only:"только декор", dec_radio_desc:"Оповещает об изменении цены газа", rate_unit:"/с",
     pps_ph:"напр. 277005", cash_ph:"напр. 16.9B", gas_ph:"напр. 100k", goal_ph:"напр. 1B",
     drill_basic:"Базовая буровая", drill_strong:"Мощная буровая", drill_enhanced:"Улучшенная буровая",
     drill_speed:"Скоростная буровая", drill_reinforced:"Усиленная буровая", drill_industrial:"Промышленная буровая",
@@ -802,6 +964,10 @@ const LANGS = {
     ref_ice:"Ледяной завод", ref_hell:"Адский завод", ref_mega_q:"Мега квантовый завод",
     ref_mega_e:"Мега энергетический завод", ref_lava:"Лавовый завод", ref_crystal:"Кристальный завод",
     ref_diamond:"Алмазный завод", ref_ruby:"Рубиновый завод",
+    dec_radio:"Радиобашня", dec_wind_b:"Базовая ветротурбина", dec_wind_m:"Средняя ветротурбина",
+    dec_trees:"Деревья", dec_lamp:"Фонарный столб", dec_flowers:"Горшечные цветы",
+    dec_contain:"Стопка контейнеров", dec_arch:"Садовая арка", dec_duck:"Статуя утки",
+    dec_fountain:"Фонтан", dec_oil_mon:"Нефтяной памятник", dec_throne:"Трон",
   },
   ar: {
     nav_production:"إحصائيات", nav_goals:"الأهداف", nav_layout:"المصمم",
@@ -815,7 +981,7 @@ const LANGS = {
     gas_amount:"كمية الغاز:", total_profit:"إجمالي الربح:",
     gas_desc:"أدخل كمية الغاز المجمعة أو المراد بيعها. مضروبة في <b>النقد لكل وحدة</b> و<b>المضاعف</b>. يدعم الاختصارات مثل <code>100k</code>، <code>2.5M</code>.",
     more_calcs:"المزيد من الحسابات قريباً…",
-    goals_title:"الأهداف", drills:"المثاقب", refineries:"المصافي",
+    goals_title:"الأهداف", drills:"المثاقب", refineries:"المصافي", decorations:"الزينة",
     total_cost:"التكلفة الإجمالية:", time_afford:"وقت الشراء:", selected:"محدد",
     cash_goal:"هدف النقد", goal_amount:"مبلغ الهدف:", time_to_goal:"الوقت المتبقي:",
     coming_soon:"قريباً",
@@ -827,7 +993,7 @@ const LANGS = {
     feat_1:"إحصائيات الإنتاج", feat_2:"حاسبة المثاقب",
     feat_3:"تتبع الأهداف", feat_4:"حاسبة ربح الغاز",
     feat_5:"سعر بيع ومضاعف قابلان للضبط", feat_6:"مصمم القاعدة (قريباً)",
-    storage:"تخزين", complete:"مكتمل!", rate_unit:"/ث",
+    storage:"تخزين", complete:"مكتمل!", decor_only:"ديكور فقط", dec_radio_desc:"تنبيه عند تغير سعر الغاز", rate_unit:"/ث",
     pps_ph:"مثال: 277005", cash_ph:"مثال: 16.9B", gas_ph:"مثال: 100k", goal_ph:"مثال: 1B",
     drill_basic:"مثقب أساسي", drill_strong:"مثقب قوي", drill_enhanced:"مثقب محسّن",
     drill_speed:"مثقب سريع", drill_reinforced:"مثقب مقوّى", drill_industrial:"مثقب صناعي",
@@ -842,6 +1008,10 @@ const LANGS = {
     ref_ice:"مصفاة جليد", ref_hell:"مصفاة جهنمية", ref_mega_q:"ميغا مصفاة كمومية",
     ref_mega_e:"ميغا مصفاة طاقة", ref_lava:"مصفاة حمم", ref_crystal:"مصفاة كريستال",
     ref_diamond:"مصفاة ألماس", ref_ruby:"مصفاة ياقوت",
+    dec_radio:"برج الراديو", dec_wind_b:"توربين رياح أساسي", dec_wind_m:"توربين رياح متوسط",
+    dec_trees:"أشجار", dec_lamp:"عمود الإضاءة", dec_flowers:"زهور في أصص",
+    dec_contain:"كومة حاويات", dec_arch:"قوس الحديقة", dec_duck:"تمثال البطة",
+    dec_fountain:"نافورة", dec_oil_mon:"نصب النفط", dec_throne:"عرش",
   },
   tr: {
     nav_production:"Üretim", nav_goals:"Hedefler", nav_layout:"Tasarımcı",
@@ -855,7 +1025,7 @@ const LANGS = {
     gas_amount:"Gaz miktarı:", total_profit:"Toplam kâr:",
     gas_desc:"Satılacak gaz miktarını girin. <b>Birim başına nakit</b> ve <b>Çarpan</b> ile çarpılır. <code>100k</code>, <code>2,5M</code> gibi kısaltmaları destekler.",
     more_calcs:"Daha fazla hesaplama yakında…",
-    goals_title:"Hedefler", drills:"Matkaplar", refineries:"Rafineriler",
+    goals_title:"Hedefler", drills:"Matkaplar", refineries:"Rafineriler", decorations:"Dekorasyonlar",
     total_cost:"Toplam maliyet:", time_afford:"Satın alma süresi:", selected:"seçildi",
     cash_goal:"Nakit hedefi", goal_amount:"Hedef tutar:", time_to_goal:"Kalan süre:",
     coming_soon:"Yakında",
@@ -867,7 +1037,7 @@ const LANGS = {
     feat_1:"Üretim istatistikleri", feat_2:"Matkap hesaplayıcı",
     feat_3:"Nakit hedef takibi", feat_4:"Gaz kârı hesaplayıcı",
     feat_5:"Yapılandırılabilir fiyat ve çarpan", feat_6:"Yerleşim tasarımcısı (yakında)",
-    storage:"depolama", complete:"Tamamlandı!", rate_unit:"/s",
+    storage:"depolama", complete:"Tamamlandı!", decor_only:"sadece dekor", dec_radio_desc:"Gaz fiyatı değiştiğinde uyarır", rate_unit:"/s",
     pps_ph:"örn. 277.005", cash_ph:"örn. 16,9B", gas_ph:"örn. 100k", goal_ph:"örn. 1B",
     drill_basic:"Temel Matkap", drill_strong:"Güçlü Matkap", drill_enhanced:"Gelişmiş Matkap",
     drill_speed:"Hızlı Matkap", drill_reinforced:"Güçlendirilmiş Matkap", drill_industrial:"Endüstriyel Matkap",
@@ -882,6 +1052,10 @@ const LANGS = {
     ref_ice:"Buz Rafineri", ref_hell:"Cehennem Rafineri", ref_mega_q:"Mega Kuantum Rafineri",
     ref_mega_e:"Mega Enerji Rafineri", ref_lava:"Lav Rafineri", ref_crystal:"Kristal Rafineri",
     ref_diamond:"Elmas Rafineri", ref_ruby:"Yakut Rafineri",
+    dec_radio:"Radyo Kulesi", dec_wind_b:"Temel Rüzgar Türbini", dec_wind_m:"Orta Rüzgar Türbini",
+    dec_trees:"Ağaçlar", dec_lamp:"Işık Direği", dec_flowers:"Saksı Çiçekleri",
+    dec_contain:"Konteyner Yığını", dec_arch:"Bahçe Kemeri", dec_duck:"Ördek Heykeli",
+    dec_fountain:"Çeşme", dec_oil_mon:"Petrol Anıtı", dec_throne:"Taht",
   },
   pl: {
     nav_production:"Produkcja", nav_goals:"Cele", nav_layout:"Projektant",
@@ -895,7 +1069,7 @@ const LANGS = {
     gas_amount:"Ilość gazu:", total_profit:"Łączny zysk:",
     gas_desc:"Wpisz ilość gazu do sprzedania. Mnożone przez <b>Gotówkę za jednostkę</b> i <b>Mnożnik</b>. Obsługuje skróty takie jak <code>100k</code>, <code>2,5M</code>.",
     more_calcs:"Więcej obliczeń wkrótce…",
-    goals_title:"Cele", drills:"Wiertła", refineries:"Rafinerie",
+    goals_title:"Cele", drills:"Wiertła", refineries:"Rafinerie", decorations:"Dekoracje",
     total_cost:"Łączny koszt:", time_afford:"Czas do zakupu:", selected:"wybranych",
     cash_goal:"Cel gotówkowy", goal_amount:"Kwota celu:", time_to_goal:"Pozostały czas:",
     coming_soon:"Wkrótce",
@@ -907,7 +1081,7 @@ const LANGS = {
     feat_1:"Statystyki produkcji", feat_2:"Kalkulator wierteł",
     feat_3:"Śledzenie celów", feat_4:"Kalkulator zysku z gazu",
     feat_5:"Konfigurowalny mnożnik i cena", feat_6:"Projektant układu (wkrótce)",
-    storage:"pojemność", complete:"Ukończono!", rate_unit:"/s",
+    storage:"pojemność", complete:"Ukończono!", decor_only:"tylko dekoracja", dec_radio_desc:"Powiadamia o zmianie ceny gazu", rate_unit:"/s",
     pps_ph:"np. 277 005", cash_ph:"np. 16,9B", gas_ph:"np. 100k", goal_ph:"np. 1B",
     drill_basic:"Podstawowe wiertło", drill_strong:"Mocne wiertło", drill_enhanced:"Ulepszone wiertło",
     drill_speed:"Szybkie wiertło", drill_reinforced:"Wzmocnione wiertło", drill_industrial:"Przemysłowe wiertło",
@@ -922,6 +1096,10 @@ const LANGS = {
     ref_ice:"Lodowa rafineria", ref_hell:"Piekielna rafineria", ref_mega_q:"Mega kwantowa rafineria",
     ref_mega_e:"Mega energetyczna rafineria", ref_lava:"Lawowa rafineria", ref_crystal:"Kryształowa rafineria",
     ref_diamond:"Diamentowa rafineria", ref_ruby:"Rubinowa rafineria",
+    dec_radio:"Wieża radiowa", dec_wind_b:"Podstawowa turbina wiatrowa", dec_wind_m:"Średnia turbina wiatrowa",
+    dec_trees:"Drzewa", dec_lamp:"Latarnia", dec_flowers:"Doniczki",
+    dec_contain:"Stos kontenerów", dec_arch:"Łuk ogrodowy", dec_duck:"Posąg kaczki",
+    dec_fountain:"Fontanna", dec_oil_mon:"Pomnik naftowy", dec_throne:"Tron",
   },
 };
 
@@ -940,11 +1118,12 @@ function loadCfg() {
     if (s.accent) cfg.accent = s.accent;
     if (s.drillCounts)    Object.assign(drillCounts, s.drillCounts);
     if (s.refineryCounts) Object.assign(refineryCounts, s.refineryCounts);
+    if (s.decorCounts)    Object.assign(decorCounts, s.decorCounts);
   } catch(_) {}
 }
 
 function saveCfg() {
-  try { localStorage.setItem(KEY, JSON.stringify({...cfg, drillCounts, refineryCounts})); } catch(_) {}
+  try { localStorage.setItem(KEY, JSON.stringify({...cfg, drillCounts, refineryCounts, decorCounts})); } catch(_) {}
 }
 
 function t(key) { return (LANGS[currentLang] && LANGS[currentLang][key]) || LANGS.en[key] || key; }
@@ -1058,16 +1237,16 @@ function calcGasProfit(str, cpu, boost) {
 function rebuildGoalLists() {
   const ds = document.getElementById('drillSelector');
   const rs = document.getElementById('refinerySelector');
-  if (!ds||!rs) return;
-  ds.innerHTML=''; rs.innerHTML='';
+  const dcs = document.getElementById('decorSelector');
+  if (!ds||!rs||!dcs) return;
+  ds.innerHTML=''; rs.innerHTML=''; dcs.innerHTML='';
 
   DRILLS.forEach(drill => {
-    const name = t(drill.name_key);
     const row = document.createElement('div');
     row.className = 'drill-row';
     row.innerHTML = `
       <div class="drill-info">
-        <div class="drill-name">${name}</div>
+        <div class="drill-name">${t(drill.name_key)}</div>
         <div class="drill-price">${fmtNum(drill.price)} · ${drill.rate}${t('rate_unit')}</div>
       </div>
       <div class="drill-counter">
@@ -1079,12 +1258,11 @@ function rebuildGoalLists() {
   });
 
   REFINERIES.forEach(ref => {
-    const name = t(ref.name_key);
     const row = document.createElement('div');
     row.className = 'drill-row';
     row.innerHTML = `
       <div class="drill-info">
-        <div class="drill-name">${name}</div>
+        <div class="drill-name">${t(ref.name_key)}</div>
         <div class="drill-price">${fmtNum(ref.price)} · ${ref.storage.toLocaleString()} ${t('storage')}</div>
       </div>
       <div class="drill-counter">
@@ -1093,6 +1271,27 @@ function rebuildGoalLists() {
         <button class="cnt-btn" data-id="${ref.name}" data-type="ref" data-dir="1">+</button>
       </div>`;
     rs.appendChild(row);
+  });
+
+  DECORATIONS.forEach(dec => {
+    const row = document.createElement('div');
+    row.className = 'drill-row';
+    const subLabel = dec.name_key === 'dec_radio'
+      ? fmtNum(dec.price) + ' · ' + t('dec_radio_desc')
+      : dec.income
+        ? fmtNum(dec.price) + ' · ' + dec.rate + t('rate_unit')
+        : fmtNum(dec.price) + ' · ' + t('decor_only');
+    row.innerHTML = `
+      <div class="drill-info">
+        <div class="drill-name">${t(dec.name_key)}</div>
+        <div class="drill-price">${subLabel}</div>
+      </div>
+      <div class="drill-counter">
+        <button class="cnt-btn" data-id="${dec.name}" data-type="dec" data-dir="-1">−</button>
+        <span class="cnt-val" id="cnt-dc-${dec.name.replace(/\s/g,'_')}">${decorCounts[dec.name]}</span>
+        <button class="cnt-btn" data-id="${dec.name}" data-type="dec" data-dir="1">+</button>
+      </div>`;
+    dcs.appendChild(row);
   });
 
   goalsRecalc();
@@ -1128,6 +1327,26 @@ function goalsRecalc() {
   const refCount = refSel.reduce((a,s)=>a+s.count,0);
   setText('ga-ref-summary', refCount>0 ? refCount+' '+t('selected') : '');
 
+  const decSel = DECORATIONS.map(d => ({ price:d.price, count:decorCounts[d.name]||0 }));
+  const anyDecs = decSel.some(s=>s.count>0);
+  let decTotal = 0; decSel.forEach(s => { decTotal+=s.price*s.count; });
+  setText('g-decTotalCost', anyDecs ? fmtNum(decTotal) : '—');
+  const dcEl = document.getElementById('g-decTime');
+  if (dcEl) {
+    if (!anyDecs) { dcEl.textContent='—'; dcEl.className='iv'; }
+    else {
+      const { cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
+      if (cashPerHr<=0) { dcEl.textContent='—'; dcEl.className='iv'; }
+      else {
+        const rem = decTotal-cfg.cash;
+        if (rem<=0) { dcEl.textContent=t('complete'); dcEl.className='iv affordable'; }
+        else { dcEl.textContent=formatDuration(rem/cashPerHr); dcEl.className='iv'; }
+      }
+    }
+  }
+  const decCount = decSel.reduce((a,s)=>a+s.count,0);
+  setText('ga-dec-summary', decCount>0 ? decCount+' '+t('selected') : '');
+
   const goalAmt = parseLarge(document.getElementById('g-goalAmt')?.value);
   const goalTime = calcGoalTime(cfg.pps, cfg.cash, goalAmt, cfg.cpu, cfg.boost);
   const gtEl = document.getElementById('g-goalTime');
@@ -1154,9 +1373,21 @@ function calcRecalc() {
 function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.mob-item').forEach(m=>m.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  document.querySelector('[data-tab="'+name+'"]').classList.add('active');
+  const sideEl = document.querySelector('.nav-item[data-tab="'+name+'"]');
+  if (sideEl) sideEl.classList.add('active');
+  const mobEl = document.querySelector('.mob-item[data-tab="'+name+'"]');
+  if (mobEl) mobEl.classList.add('active');
 }
+
+document.querySelector('.hamburger').addEventListener('click', () => {
+  document.querySelector('.sidebar').classList.toggle('collapsed');
+});
+
+document.querySelectorAll('.mob-item').forEach(m => {
+  m.addEventListener('click', () => switchTab(m.dataset.tab));
+});
 
 function initGoalAccordion(id) {
   const el = document.getElementById(id);
@@ -1236,9 +1467,12 @@ document.querySelectorAll('.drill-selector').forEach(sel => {
     if (type==='drill') {
       drillCounts[id] = Math.max(0,(drillCounts[id]||0)+dir);
       setText('cnt-d-'+id.replace(/\s/g,'_'), drillCounts[id]);
-    } else {
+    } else if (type==='ref') {
       refineryCounts[id] = Math.max(0,(refineryCounts[id]||0)+dir);
       setText('cnt-r-'+id.replace(/\s/g,'_'), refineryCounts[id]);
+    } else if (type==='dec') {
+      decorCounts[id] = Math.max(0,(decorCounts[id]||0)+dir);
+      setText('cnt-dc-'+id.replace(/\s/g,'_'), decorCounts[id]);
     }
     saveCfg(); goalsRecalc();
   });
@@ -1253,6 +1487,7 @@ gasToggle.addEventListener('click', () => {
 
 initGoalAccordion('ga-drills');
 initGoalAccordion('ga-refineries');
+initGoalAccordion('ga-decorations');
 
 applyLang();
 psRecalc();
