@@ -8,352 +8,129 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:        #0f1923;
-  --sidebar:   #111d2b;
-  --card:      #1a2535;
-  --card2:     #1f2d3f;
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(255,255,255,0.13);
-  --text:      #cdd8e3;
-  --text2:     #e8f0f7;
-  --muted:     #5f7a92;
-  --dim:       #2e4054;
+  --bg:        #000000;
+  --sidebar:   #0a0a0a;
+  --card:      #111111;
+  --card2:     #181818;
+  --border:    rgba(255,255,255,0.08);
+  --border2:   rgba(255,255,255,0.15);
+  --text:      #b0b8c4;
+  --text2:     #e2e8f0;
+  --muted:     #505a66;
+  --dim:       #252525;
   --blue:      #2563eb;
   --blue-hi:   #3b82f6;
   --blue-lo:   rgba(59,130,246,0.15);
   --green:     #22c55e;
   --green-bg:  #15803d;
-  --red:       #ef4444;
   --cyan:      #22d3ee;
   --font:      'Inter', system-ui, sans-serif;
   --sidebar-w: 192px;
 }
-
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font-size: 14px;
-}
-
-.titlebar {
-  height: 30px;
-  background: #0b1520;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  gap: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
-}
-.titlebar-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--dim); }
-.titlebar-name { font-size: 12px; color: var(--muted); margin-left: 6px; }
-
-.app { display: flex; flex: 1; overflow: hidden; }
-
-.sidebar {
-  width: var(--sidebar-w);
-  background: var(--sidebar);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.sidebar-header {
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.sidebar-title { font-size: 15px; font-weight: 600; color: var(--text2); }
-.hamburger { display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 4px; }
-.hamburger span { display: block; width: 18px; height: 2px; background: var(--muted); border-radius: 2px; }
-
-.nav-list { padding: 8px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 9px 12px;
-  border-radius: 7px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  transition: all 0.14s;
-  border: 1px solid transparent;
-}
-.nav-item svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.55; transition: opacity 0.14s; }
-.nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
-.nav-item:hover svg { opacity: 0.8; }
-.nav-item.active { background: var(--blue); color: #fff; border-color: rgba(255,255,255,0.1); }
-.nav-item.active svg { opacity: 1; }
-.sidebar-bottom { padding: 8px; border-top: 1px solid var(--border); }
-
-.main { flex: 1; overflow-y: auto; padding: 26px 30px 40px; }
-.main::-webkit-scrollbar { width: 5px; }
-.main::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 4px; }
-
-.page-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
-.page-hdr svg { width: 26px; height: 26px; flex-shrink: 0; }
-.page-hdr h1 { font-size: 22px; font-weight: 700; color: var(--text2); }
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px 22px;
-  margin-bottom: 16px;
-}
-.card-title {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text2);
-  margin-bottom: 18px;
-}
-.card-title svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-.field-lbl { font-size: 12px; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.2px; }
-.field-inp {
-  width: 100%;
-  background: var(--card2);
-  border: 1px solid var(--border2);
-  border-radius: 6px;
-  color: var(--text2);
-  font-family: var(--font);
-  font-size: 14px;
-  padding: 9px 13px;
-  outline: none;
-}
-.field-inp:focus { border-color: var(--blue-hi); box-shadow: 0 0 0 2px var(--blue-lo); }
-.field-mb { margin-bottom: 13px; }
-.field-hint { font-size: 11px; color: var(--muted); min-height: 16px; margin-top: 4px; margin-bottom: 10px; transition: color 0.15s; }
-.field-hint.ok { color: var(--cyan); }
-.field-hint.err { color: #f87171; }
-
-.slider-row { margin-bottom: 16px; }
-.slider-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.slider-row-top .field-lbl { margin-bottom: 0; }
-.slider-val { font-size: 13px; font-weight: 600; color: var(--text2); }
-input[type=range] {
-  width: 100%;
-  height: 5px;
-  border-radius: 5px;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
-  background: linear-gradient(to right, var(--blue-hi) var(--pct, 50%), var(--dim) var(--pct, 50%));
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--blue-hi);
-  border: 2px solid #fff;
-  cursor: pointer;
-}
-
-.stat-line { font-size: 13px; color: var(--muted); margin-bottom: 9px; line-height: 1.5; }
-.stat-line b { color: var(--text2); font-weight: 600; }
-.stat-green { color: var(--green); font-weight: 600; }
-
-.btn {
-  border: none;
-  border-radius: 6px;
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 9px 18px;
-  cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-.btn:hover { opacity: 0.87; }
-.btn:active { transform: scale(0.97); }
-.btn-blue { background: var(--blue); color: #fff; }
-
-.info-box {
-  background: var(--card2);
-  border: 1px solid var(--border2);
-  border-radius: 7px;
-  padding: 11px 15px;
-  font-size: 13px;
-  color: var(--muted);
-}
-.info-box .iv { color: var(--cyan); font-weight: 600; }
-.info-box .iv.affordable { color: var(--green); }
-
-.drill-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-  max-height: 360px;
-  overflow-y: auto;
-  padding-right: 2px;
-}
-.drill-selector::-webkit-scrollbar { width: 4px; }
-.drill-selector::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 4px; }
-
-.drill-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 10px 14px;
-  gap: 12px;
-  transition: border-color 0.13s;
-}
-.drill-row:hover { border-color: var(--border2); }
-.drill-info { flex: 1; min-width: 0; }
-.drill-name { font-size: 13px; font-weight: 500; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.drill-price { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.drill-counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.cnt-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
-  border: 1px solid var(--border2);
-  background: var(--dim);
-  color: var(--text2);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.13s;
-  line-height: 1;
-}
-.cnt-btn:hover { background: var(--blue); }
-.cnt-val {
-  min-width: 28px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text2);
-  font-family: var(--font);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2px 6px;
-}
-
-.calc-result {
-  background: var(--card2);
-  border: 1px solid var(--border2);
-  border-radius: 7px;
-  padding: 11px 15px;
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 10px;
-}
-.calc-result .cv { color: var(--green); font-weight: 600; }
-
-.coming-soon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 60px 20px;
-  text-align: center;
-}
-.coming-soon svg { width: 56px; height: 56px; color: var(--dim); }
-.coming-soon h2 { font-size: 18px; font-weight: 600; color: var(--text2); }
-.coming-soon p { font-size: 13px; color: var(--muted); max-width: 300px; line-height: 1.6; }
-
-.about-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; margin-bottom: 12px; }
-.about-card h2 { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 9px; }
-.about-card p, .about-card li { font-size: 13px; color: var(--muted); line-height: 1.75; }
-.about-card ul { padding-left: 0; list-style: none; }
-.about-card li::before { content: "• "; color: var(--blue-hi); }
-
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-.accordion {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.accordion-trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text2);
-  transition: background 0.15s;
-}
-.accordion-trigger:hover { background: rgba(255,255,255,0.03); }
-.accordion-chevron { transition: transform 0.25s ease; flex-shrink: 0; color: var(--muted); }
-.accordion-trigger[aria-expanded="true"] .accordion-chevron { transform: rotate(180deg); }
-.accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.25s ease; opacity: 0; }
-.accordion-body.open { max-height: 600px; opacity: 1; }
-.accordion-inner { padding: 0 18px 18px; border-top: 1px solid var(--border); }
-.gas-desc {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.75;
-  padding: 10px 12px;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-top: 14px;
-}
-.gas-desc b { color: var(--text); }
-.gas-desc code { color: var(--cyan); font-family: monospace; font-size: 11px; }
-.goal-accordion { overflow: hidden; }
-.goal-acc-trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 13px 18px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text2);
-  transition: background 0.14s;
-}
-.goal-acc-trigger:hover { background: rgba(255,255,255,0.03); }
-.goal-acc-chevron { transition: transform 0.22s ease; color: var(--muted); flex-shrink: 0; }
-.goal-acc-trigger[aria-expanded="true"] .goal-acc-chevron { transform: rotate(180deg); }
-.goal-acc-summary { font-size: 11px; font-weight: 500; color: var(--muted); font-family: var(--font); }
-.goal-acc-body { max-height: 0; overflow: hidden; transition: max-height 0.28s ease, opacity 0.22s ease; opacity: 0; }
-.goal-acc-body.open { max-height: 800px; opacity: 1; }
-.goal-acc-inner { padding: 0 16px 16px; border-top: 1px solid var(--border); }
-.goal-acc-divider { height: 1px; background: var(--border); }
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:14px;}
+.titlebar{height:30px;background:#000;display:flex;align-items:center;padding:0 12px;gap:8px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.titlebar-dot{width:11px;height:11px;border-radius:50%;background:var(--dim);}
+.titlebar-name{font-size:12px;color:var(--muted);margin-left:6px;}
+.app{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:var(--sidebar-w);background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+.sidebar-header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sidebar-title{font-size:15px;font-weight:600;color:var(--text2);}
+.hamburger{display:flex;flex-direction:column;gap:4px;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px;}
+.nav-list{padding:8px;flex:1;display:flex;flex-direction:column;gap:2px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.14s;border:1px solid transparent;}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:0.5;transition:opacity 0.14s;}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.nav-item:hover svg{opacity:0.8;}
+.nav-item.active{background:var(--blue);color:#fff;border-color:rgba(255,255,255,0.1);}
+.nav-item.active svg{opacity:1;}
+.sidebar-bottom{padding:8px;border-top:1px solid var(--border);}
+.main{flex:1;overflow-y:auto;padding:26px 30px 40px;}
+.main::-webkit-scrollbar{width:5px;}
+.main::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px;}
+.page-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.page-hdr svg{width:26px;height:26px;flex-shrink:0;}
+.page-hdr h1{font-size:22px;font-weight:700;color:var(--text2);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:16px;}
+.card-title{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:600;color:var(--text2);margin-bottom:18px;}
+.card-title svg{width:18px;height:18px;flex-shrink:0;}
+.field-lbl{font-size:12px;color:var(--muted);margin-bottom:5px;letter-spacing:0.2px;}
+.field-inp{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:var(--font);font-size:14px;padding:9px 13px;outline:none;}
+.field-inp:focus{border-color:var(--blue-hi);box-shadow:0 0 0 2px var(--blue-lo);}
+.field-mb{margin-bottom:13px;}
+.field-hint{font-size:11px;color:var(--muted);min-height:16px;margin-top:4px;margin-bottom:10px;transition:color 0.15s;}
+.field-hint.ok{color:var(--cyan);}
+.field-hint.err{color:#f87171;}
+.slider-row{margin-bottom:16px;}
+.slider-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.slider-row-top .field-lbl{margin-bottom:0;}
+.slider-val{font-size:13px;font-weight:600;color:var(--text2);}
+input[type=range]{width:100%;height:5px;border-radius:5px;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;background:linear-gradient(to right,var(--blue-hi) var(--pct,50%),var(--dim) var(--pct,50%));}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue-hi);border:2px solid #fff;cursor:pointer;}
+.stat-line{font-size:13px;color:var(--muted);margin-bottom:9px;line-height:1.5;}
+.stat-line b{color:var(--text2);font-weight:600;}
+.stat-green{color:var(--green);font-weight:600;}
+.btn{border:none;border-radius:6px;font-family:var(--font);font-size:13px;font-weight:600;padding:9px 18px;cursor:pointer;transition:opacity 0.15s,transform 0.1s;display:inline-flex;align-items:center;gap:7px;}
+.btn:hover{opacity:0.87;}
+.btn:active{transform:scale(0.97);}
+.btn-blue{background:var(--blue);color:#fff;}
+.info-box{background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:11px 15px;font-size:13px;color:var(--muted);}
+.info-box .iv{color:var(--cyan);font-weight:600;}
+.info-box .iv.affordable{color:var(--green);}
+.drill-selector{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;max-height:360px;overflow-y:auto;padding-right:2px;}
+.drill-selector::-webkit-scrollbar{width:4px;}
+.drill-selector::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px;}
+.drill-row{display:flex;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:10px 14px;gap:12px;transition:border-color 0.13s;}
+.drill-row:hover{border-color:var(--border2);}
+.drill-info{flex:1;min-width:0;}
+.drill-name{font-size:13px;font-weight:500;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.drill-price{font-size:11px;color:var(--muted);margin-top:2px;}
+.drill-counter{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.cnt-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--border2);background:var(--dim);color:var(--text2);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.13s;line-height:1;}
+.cnt-btn:hover{background:var(--blue);}
+.cnt-val{min-width:28px;text-align:center;font-size:13px;font-weight:600;color:var(--text2);font-family:var(--font);background:var(--card);border:1px solid var(--border);border-radius:4px;padding:2px 6px;}
+.calc-result{background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:11px 15px;font-size:13px;color:var(--muted);margin-top:10px;}
+.calc-result .cv{color:var(--green);font-weight:600;}
+.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px 20px;text-align:center;}
+.coming-soon svg{width:56px;height:56px;color:var(--dim);}
+.coming-soon h2{font-size:18px;font-weight:600;color:var(--text2);}
+.coming-soon p{font-size:13px;color:var(--muted);max-width:300px;line-height:1.6;}
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:12px;}
+.about-card h2{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:9px;}
+.about-card p,.about-card li{font-size:13px;color:var(--muted);line-height:1.75;}
+.about-card ul{padding-left:0;list-style:none;}
+.about-card li::before{content:"• ";color:var(--blue-hi);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.accordion{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.accordion-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:none;border:none;cursor:pointer;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text2);transition:background 0.15s;}
+.accordion-trigger:hover{background:rgba(255,255,255,0.03);}
+.accordion-chevron{transition:transform 0.25s ease;flex-shrink:0;color:var(--muted);}
+.accordion-trigger[aria-expanded="true"] .accordion-chevron{transform:rotate(180deg);}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease,opacity 0.25s ease;opacity:0;}
+.accordion-body.open{max-height:600px;opacity:1;}
+.accordion-inner{padding:0 18px 18px;border-top:1px solid var(--border);}
+.gas-desc{font-size:12px;color:var(--muted);line-height:1.75;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:6px;margin-top:14px;}
+.gas-desc b{color:var(--text);}
+.gas-desc code{color:var(--cyan);font-family:monospace;font-size:11px;}
+.goal-accordion{overflow:hidden;}
+.goal-acc-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:none;border:none;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text2);transition:background 0.14s;}
+.goal-acc-trigger:hover{background:rgba(255,255,255,0.03);}
+.goal-acc-chevron{transition:transform 0.22s ease;color:var(--muted);flex-shrink:0;}
+.goal-acc-trigger[aria-expanded="true"] .goal-acc-chevron{transform:rotate(180deg);}
+.goal-acc-summary{font-size:11px;font-weight:500;color:var(--muted);font-family:var(--font);}
+.goal-acc-body{max-height:0;overflow:hidden;transition:max-height 0.28s ease,opacity 0.22s ease;opacity:0;}
+.goal-acc-body.open{max-height:800px;opacity:1;}
+.goal-acc-inner{padding:0 16px 16px;border-top:1px solid var(--border);}
+.goal-acc-divider{height:1px;background:var(--border);}
+.lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.lang-btn{background:var(--card2);border:1px solid var(--border2);border-radius:7px;color:var(--muted);font-family:var(--font);font-size:12px;font-weight:500;padding:9px 12px;cursor:pointer;text-align:left;transition:all 0.14s;}
+.lang-btn:hover{border-color:var(--blue-hi);color:var(--text2);}
+.lang-btn.active{background:var(--blue);border-color:var(--blue-hi);color:#fff;}
+.color-swatches{display:flex;flex-wrap:wrap;gap:10px;}
+.swatch{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:border-color 0.15s,transform 0.12s;outline:none;}
+.swatch:hover{transform:scale(1.12);}
+.swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(--blue-hi);}
 </style>
 </head>
 <body>
@@ -366,41 +143,33 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <div class="app">
-
   <aside class="sidebar">
     <div class="sidebar-header">
-      <span class="sidebar-title">Menu</span>
+      <span class="sidebar-title" id="sidebarMenuLabel">Menu</span>
       <div class="hamburger"><span></span><span></span><span></span></div>
     </div>
     <nav class="nav-list">
       <div class="nav-item active" data-tab="production">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/>
-        </svg>
-        Production Stats
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+        <span data-i18n="nav_production">Production Stats</span>
       </div>
       <div class="nav-item" data-tab="goals">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/>
-          <path d="M12 17v4"/><path d="M8 21h8"/>
-          <path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/>
-        </svg>
-        Goals
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/></svg>
+        <span data-i18n="nav_goals">Goals</span>
       </div>
       <div class="nav-item" data-tab="layout">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-        </svg>
-        Layout Designer
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span data-i18n="nav_layout">Layout Designer</span>
       </div>
     </nav>
     <div class="sidebar-bottom">
+      <div class="nav-item" data-tab="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span data-i18n="nav_settings">Settings</span>
+      </div>
       <div class="nav-item" data-tab="about">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        About
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span data-i18n="nav_about">About</span>
       </div>
     </div>
   </aside>
@@ -409,55 +178,46 @@ input[type=range]::-webkit-slider-thumb {
 
     <div id="tab-production" class="tab-panel active">
       <div class="page-hdr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
-          <rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/>
-        </svg>
-        <h1>Production Stats</h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+        <h1 data-i18n="nav_production">Production Stats</h1>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-          </svg>
-          Rate
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <span data-i18n="rate_title">Rate</span>
         </div>
-        <div class="field-lbl">Petrol per second:</div>
-        <input class="field-inp" type="text" id="ps-pps" placeholder="e.g. 277,005 or 277005" autocomplete="off"/>
+        <div class="field-lbl" data-i18n="petrol_per_sec">Petrol per second:</div>
+        <input class="field-inp" type="text" id="ps-pps" autocomplete="off"/>
         <div class="field-hint" id="ps-pps-hint"></div>
-        <div class="field-lbl" style="margin-top:12px;">Current Cash (optional):</div>
-        <input class="field-inp" type="text" id="ps-cash" placeholder="e.g. 16.9B or 16,900,000,000" autocomplete="off"/>
+        <div class="field-lbl" style="margin-top:12px;" data-i18n="current_cash">Current Cash (optional):</div>
+        <input class="field-inp" type="text" id="ps-cash" autocomplete="off"/>
         <div class="field-hint" id="ps-cash-hint" style="margin-bottom:14px;"></div>
         <button class="btn btn-blue" id="ps-save">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-            <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
-          </svg>
-          Save Config
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span data-i18n="save_config">Save Config</span>
         </button>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-          </svg>
-          Stats
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span data-i18n="stats_title">Stats</span>
         </div>
-        <div class="stat-line">Petrol/hr: <b id="ps-petrolHr">—</b></div>
-        <div class="stat-line">Cash/hr: <span class="stat-green" id="ps-cashHr">—</span></div>
-        <div class="stat-line">Cash per Unit: <b id="ps-cpuLabel">$15</b></div>
+        <div class="stat-line"><span data-i18n="petrol_hr">Petrol/hr:</span> <b id="ps-petrolHr">—</b></div>
+        <div class="stat-line"><span data-i18n="cash_hr">Cash/hr:</span> <span class="stat-green" id="ps-cashHr">—</span></div>
+        <div class="stat-line"><span data-i18n="cash_per_unit">Cash per Unit:</span> <b id="ps-cpuLabel">$15</b></div>
         <div class="slider-row">
           <div class="slider-row-top">
-            <span class="field-lbl">Cash per Unit ($1 – $15)</span>
+            <span class="field-lbl" data-i18n="cpu_label">Cash per Unit ($1 – $15)</span>
             <span class="slider-val" id="ps-cpuVal">$15</span>
           </div>
           <input type="range" id="ps-cpuSlider" min="1" max="15" value="15"/>
         </div>
-        <div class="stat-line">Boost: <b id="ps-boostLabel">285%</b></div>
+        <div class="stat-line"><span data-i18n="boost">Boost:</span> <b id="ps-boostLabel">285%</b></div>
         <div class="slider-row">
           <div class="slider-row-top">
-            <span class="field-lbl">Boost multiplier (100% – 285%)</span>
+            <span class="field-lbl" data-i18n="boost_label">Boost multiplier (100% – 285%)</span>
             <span class="slider-val" id="ps-boostVal">285%</span>
           </div>
           <input type="range" id="ps-boostSlider" min="100" max="285" value="285"/>
@@ -467,22 +227,18 @@ input[type=range]::-webkit-slider-thumb {
       <div class="accordion" id="gasAccordion">
         <button class="accordion-trigger" id="gasToggle" aria-expanded="false">
           <div style="display:flex;align-items:center;gap:9px;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 3h7v9H3z"/><path d="M14 3h7v5h-7z"/><path d="M14 12h7v9h-7z"/><path d="M3 16h7v5H3z"/>
-            </svg>
-            Gas Profit Calculator
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v9H3z"/><path d="M14 3h7v5h-7z"/><path d="M14 12h7v9h-7z"/><path d="M3 16h7v5H3z"/></svg>
+            <span data-i18n="gas_title">Gas Profit Calculator</span>
           </div>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="accordion-body" id="gasBody">
           <div class="accordion-inner">
-            <p class="gas-desc">Enter the amount of gas (petrol units) you have collected or plan to sell. This multiplies that quantity by your configured <b>Cash per Unit</b> and <b>Boost multiplier</b> to show the total cash you'll receive. Supports shorthand like <code>100k</code>, <code>2.5M</code>, or comma-separated numbers.</p>
-            <div class="field-lbl" style="margin-top:12px;">Gas Amount:</div>
-            <input class="field-inp field-mb" type="text" id="calc-gas" placeholder="e.g. 100k or 2,500,000" autocomplete="off"/>
-            <div class="calc-result">Total Profit: <span class="cv" id="calc-profit">$0.00</span></div>
-            <div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:10px;">More calculations coming soon…</div>
+            <p class="gas-desc" id="gasDesc"></p>
+            <div class="field-lbl" style="margin-top:12px;" data-i18n="gas_amount">Gas Amount:</div>
+            <input class="field-inp field-mb" type="text" id="calc-gas" autocomplete="off"/>
+            <div class="calc-result"><span data-i18n="total_profit">Total Profit:</span> <span class="cv" id="calc-profit">$0.00</span></div>
+            <div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:10px;" data-i18n="more_calcs">More calculations coming soon…</div>
           </div>
         </div>
       </div>
@@ -490,21 +246,16 @@ input[type=range]::-webkit-slider-thumb {
 
     <div id="tab-goals" class="tab-panel">
       <div class="page-hdr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
-          <path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/>
-          <path d="M12 17v4"/><path d="M8 21h8"/>
-          <path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/>
-        </svg>
-        <h1>Goals</h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/></svg>
+        <h1 data-i18n="nav_goals">Goals</h1>
       </div>
 
       <div class="card" style="padding:0;overflow:hidden;">
-
         <div class="goal-accordion" id="ga-drills">
           <button class="goal-acc-trigger" aria-expanded="false">
             <div style="display:flex;align-items:center;gap:9px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-              Drills
+              <span data-i18n="drills">Drills</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;">
               <span class="goal-acc-summary" id="ga-drills-summary"></span>
@@ -515,20 +266,18 @@ input[type=range]::-webkit-slider-thumb {
             <div class="goal-acc-inner">
               <div class="drill-selector" id="drillSelector"></div>
               <div class="info-box" style="margin-top:4px;">
-                Total cost: <span class="iv" id="g-totalCost">—</span> &nbsp;|&nbsp;
-                Time to afford: <span class="iv" id="g-drillTime">—</span>
+                <span data-i18n="total_cost">Total cost:</span> <span class="iv" id="g-totalCost">—</span> &nbsp;|&nbsp;
+                <span data-i18n="time_afford">Time to afford:</span> <span class="iv" id="g-drillTime">—</span>
               </div>
             </div>
           </div>
         </div>
-
         <div class="goal-acc-divider"></div>
-
         <div class="goal-accordion" id="ga-refineries">
           <button class="goal-acc-trigger" aria-expanded="false">
             <div style="display:flex;align-items:center;gap:9px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-              Refineries
+              <span data-i18n="refineries">Refineries</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;">
               <span class="goal-acc-summary" id="ga-ref-summary"></span>
@@ -539,76 +288,104 @@ input[type=range]::-webkit-slider-thumb {
             <div class="goal-acc-inner">
               <div class="drill-selector" id="refinerySelector"></div>
               <div class="info-box" style="margin-top:4px;">
-                Total cost: <span class="iv" id="g-refTotalCost">—</span> &nbsp;|&nbsp;
-                Time to afford: <span class="iv" id="g-refTime">—</span>
+                <span data-i18n="total_cost">Total cost:</span> <span class="iv" id="g-refTotalCost">—</span> &nbsp;|&nbsp;
+                <span data-i18n="time_afford">Time to afford:</span> <span class="iv" id="g-refTime">—</span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="card">
         <div class="card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          Cash Goal
+          <span data-i18n="cash_goal">Cash Goal</span>
         </div>
-        <div class="field-lbl">Goal Amount:</div>
-        <input class="field-inp field-mb" type="text" id="g-goalAmt" placeholder="e.g. 1B"/>
+        <div class="field-lbl" data-i18n="goal_amount">Goal Amount:</div>
+        <input class="field-inp field-mb" type="text" id="g-goalAmt"/>
         <div class="info-box">
-          Time to goal: <span class="iv" id="g-goalTime">—</span>
+          <span data-i18n="time_to_goal">Time to goal:</span> <span class="iv" id="g-goalTime">—</span>
         </div>
       </div>
     </div>
 
     <div id="tab-layout" class="tab-panel">
       <div class="page-hdr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-        </svg>
-        <h1>Layout Designer</h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <h1 data-i18n="nav_layout">Layout Designer</h1>
       </div>
       <div class="card coming-soon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-          <line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2"/>
-          <line x1="12" y1="9" x2="12" y2="15" stroke-dasharray="2 2"/>
-        </svg>
-        <h2>Coming Soon</h2>
-        <p>The Layout Designer is currently in development. Place and arrange drills, refineries, and totems on your base grid to optimise production.</p>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2"/><line x1="12" y1="9" x2="12" y2="15" stroke-dasharray="2 2"/></svg>
+        <h2 data-i18n="coming_soon">Coming Soon</h2>
+        <p data-i18n="layout_desc">The Layout Designer is currently in development.</p>
+      </div>
+    </div>
+
+    <div id="tab-settings" class="tab-panel">
+      <div class="page-hdr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <h1 data-i18n="nav_settings">Settings</h1>
+      </div>
+      <div class="about-card">
+        <h2 data-i18n="lang_heading">Language</h2>
+        <p style="margin-bottom:12px;" data-i18n="lang_desc">Choose your preferred display language.</p>
+        <div class="lang-grid" id="langGrid">
+          <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+          <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+          <button class="lang-btn" data-lang="fr">🇫🇷 Français</button>
+          <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+          <button class="lang-btn" data-lang="pt">🇧🇷 Português</button>
+          <button class="lang-btn" data-lang="zh">🇨🇳 中文</button>
+          <button class="lang-btn" data-lang="ja">🇯🇵 日本語</button>
+          <button class="lang-btn" data-lang="ko">🇰🇷 한국어</button>
+          <button class="lang-btn" data-lang="ru">🇷🇺 Русский</button>
+          <button class="lang-btn" data-lang="ar">🇸🇦 العربية</button>
+          <button class="lang-btn" data-lang="tr">🇹🇷 Türkçe</button>
+          <button class="lang-btn" data-lang="pl">🇵🇱 Polski</button>
+        </div>
+      </div>
+      <div class="about-card">
+        <h2 data-i18n="accent_heading">Accent Color</h2>
+        <p style="margin-bottom:14px;" data-i18n="accent_desc">Changes the highlight color used throughout the app.</p>
+        <div class="color-swatches" id="colorSwatches">
+          <button class="swatch" data-color="#2563eb" data-hi="#3b82f6" title="Blue"   style="background:#2563eb;"></button>
+          <button class="swatch" data-color="#7c3aed" data-hi="#8b5cf6" title="Purple" style="background:#7c3aed;"></button>
+          <button class="swatch" data-color="#db2777" data-hi="#ec4899" title="Pink"   style="background:#db2777;"></button>
+          <button class="swatch" data-color="#dc2626" data-hi="#ef4444" title="Red"    style="background:#dc2626;"></button>
+          <button class="swatch" data-color="#d97706" data-hi="#f59e0b" title="Amber"  style="background:#d97706;"></button>
+          <button class="swatch" data-color="#16a34a" data-hi="#22c55e" title="Green"  style="background:#16a34a;"></button>
+          <button class="swatch" data-color="#0891b2" data-hi="#06b6d4" title="Cyan"   style="background:#0891b2;"></button>
+          <button class="swatch" data-color="#9f1239" data-hi="#e11d48" title="Rose"   style="background:#9f1239;"></button>
+        </div>
       </div>
     </div>
 
     <div id="tab-about" class="tab-panel">
       <div class="page-hdr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        <h1>About</h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <h1 data-i18n="nav_about">About</h1>
       </div>
       <div class="about-card">
-        <h2>Oil Empire Calculator</h2>
-        <p>A powerful calculator tool for Oil Empire optimisation. Calculate production rates, drill affordability, and track your cash goals.</p>
+        <h2 data-i18n="about_title">Oil Empire Calculator</h2>
+        <p data-i18n="app_desc">A powerful calculator tool for Oil Empire optimisation.</p>
       </div>
       <div class="about-card">
-        <h2>Features</h2>
+        <h2 data-i18n="features">Features</h2>
         <ul>
-          <li>Production statistics and rates</li>
-          <li>Drill affordability calculator</li>
-          <li>Cash goal tracker</li>
-          <li>Gas profit calculator</li>
-          <li>Configurable sale price and totem boost multiplier</li>
-          <li>Layout designer (coming soon)</li>
+          <li data-i18n="feat_1">Production statistics and rates</li>
+          <li data-i18n="feat_2">Drill affordability calculator</li>
+          <li data-i18n="feat_3">Cash goal tracker</li>
+          <li data-i18n="feat_4">Gas profit calculator</li>
+          <li data-i18n="feat_5">Configurable sale price and totem boost multiplier</li>
+          <li data-i18n="feat_6">Layout designer (coming soon)</li>
         </ul>
       </div>
       <div class="about-card">
-        <h2>Version</h2>
+        <h2 data-i18n="version">Version</h2>
         <p>v1.0.0</p>
       </div>
       <div class="about-card">
-        <h2>Built With</h2>
+        <h2 data-i18n="built_with">Built With</h2>
         <p>HTML · CSS · Vanilla JavaScript</p>
       </div>
     </div>
@@ -618,143 +395,539 @@ input[type=range]::-webkit-slider-thumb {
 
 <script>
 const DRILLS = [
-  { name: "Basic Drill",             price: 500,         rate: 1    },
-  { name: "Strong Drill",            price: 1800,        rate: 3    },
-  { name: "Enhanced Drill",          price: 3600,        rate: 4    },
-  { name: "Speed Drill",             price: 7200,        rate: 6    },
-  { name: "Reinforced Drill",        price: 12000,       rate: 8    },
-  { name: "Industrial Drill",        price: 20000,       rate: 10   },
-  { name: "Double Industrial Drill", price: 30000,       rate: 12   },
-  { name: "Turbo Drill",             price: 80000,       rate: 16   },
-  { name: "Mega Drill",              price: 140000,      rate: 20   },
-  { name: "Mega Emerald Drill",      price: 400000,      rate: 25   },
-  { name: "Hell Drill",              price: 1225000,     rate: 35   },
-  { name: "Plasma Drill",            price: 4500000,     rate: 50   },
-  { name: "Huge Long Drill",         price: 40000000,    rate: 220  },
-  { name: "Mega Plasma Drill",       price: 95000000,    rate: 275  },
-  { name: "Multi Drill",             price: 280000000,   rate: 350  },
-  { name: "Lava Drill",              price: 900000000,   rate: 600  },
-  { name: "Ice Plasma Drill",        price: 2400000000,  rate: 800  },
-  { name: "Crystal Drill",           price: 9000000000,  rate: 1500 },
-  { name: "Diamond Drill",           price: 27500000000, rate: 2750 },
-  { name: "Ruby Drill",              price: 85500000000, rate: 4500 },
+  { name_key:"drill_basic",       name:"Basic Drill",             price:500,         rate:1    },
+  { name_key:"drill_strong",      name:"Strong Drill",            price:1800,        rate:3    },
+  { name_key:"drill_enhanced",    name:"Enhanced Drill",          price:3600,        rate:4    },
+  { name_key:"drill_speed",       name:"Speed Drill",             price:7200,        rate:6    },
+  { name_key:"drill_reinforced",  name:"Reinforced Drill",        price:12000,       rate:8    },
+  { name_key:"drill_industrial",  name:"Industrial Drill",        price:20000,       rate:10   },
+  { name_key:"drill_double",      name:"Double Industrial Drill", price:30000,       rate:12   },
+  { name_key:"drill_turbo",       name:"Turbo Drill",             price:80000,       rate:16   },
+  { name_key:"drill_mega",        name:"Mega Drill",              price:140000,      rate:20   },
+  { name_key:"drill_mega_em",     name:"Mega Emerald Drill",      price:400000,      rate:25   },
+  { name_key:"drill_hell",        name:"Hell Drill",              price:1225000,     rate:35   },
+  { name_key:"drill_plasma",      name:"Plasma Drill",            price:4500000,     rate:50   },
+  { name_key:"drill_huge",        name:"Huge Long Drill",         price:40000000,    rate:220  },
+  { name_key:"drill_mega_pl",     name:"Mega Plasma Drill",       price:95000000,    rate:275  },
+  { name_key:"drill_multi",       name:"Multi Drill",             price:280000000,   rate:350  },
+  { name_key:"drill_lava",        name:"Lava Drill",              price:900000000,   rate:600  },
+  { name_key:"drill_ice",         name:"Ice Plasma Drill",        price:2400000000,  rate:800  },
+  { name_key:"drill_crystal",     name:"Crystal Drill",           price:9000000000,  rate:1500 },
+  { name_key:"drill_diamond",     name:"Diamond Drill",           price:27500000000, rate:2750 },
+  { name_key:"drill_ruby",        name:"Ruby Drill",              price:85500000000, rate:4500 },
 ];
 
 const REFINERIES = [
-  { name: "Basic Refinery",        price: 500,          storage: 50      },
-  { name: "Enhanced Refinery",     price: 2500,         storage: 150     },
-  { name: "Reinforced Refinery",   price: 6250,         storage: 250     },
-  { name: "Advanced Refinery",     price: 20000,        storage: 500     },
-  { name: "Plasma Refinery",       price: 50000,        storage: 800     },
-  { name: "Industrial Refinery",   price: 200000,       storage: 1500    },
-  { name: "Energy Refinery",       price: 700000,       storage: 2000    },
-  { name: "Mega Refinery",         price: 3000000,      storage: 5000    },
-  { name: "Quantum Refinery",      price: 5000000,      storage: 7500    },
-  { name: "Ice Refinery",          price: 8000000,      storage: 12500   },
-  { name: "Hell Refinery",         price: 16000000,     storage: 20000   },
-  { name: "Mega Quantum Refinery", price: 90000000,     storage: 100000  },
-  { name: "Mega Energy Refinery",  price: 150000000,    storage: 150000  },
-  { name: "Lava Refinery",         price: 360000000,    storage: 275000  },
-  { name: "Crystal Refinery",      price: 600000000,    storage: 400000  },
-  { name: "Diamond Refinery",      price: 5000000000,   storage: 1000000 },
-  { name: "Ruby Refinery",         price: 50000000000,  storage: 5000000 },
+  { name_key:"ref_basic",      name:"Basic Refinery",        price:500,          storage:50      },
+  { name_key:"ref_enhanced",   name:"Enhanced Refinery",     price:2500,         storage:150     },
+  { name_key:"ref_reinforced", name:"Reinforced Refinery",   price:6250,         storage:250     },
+  { name_key:"ref_advanced",   name:"Advanced Refinery",     price:20000,        storage:500     },
+  { name_key:"ref_plasma",     name:"Plasma Refinery",       price:50000,        storage:800     },
+  { name_key:"ref_industrial", name:"Industrial Refinery",   price:200000,       storage:1500    },
+  { name_key:"ref_energy",     name:"Energy Refinery",       price:700000,       storage:2000    },
+  { name_key:"ref_mega",       name:"Mega Refinery",         price:3000000,      storage:5000    },
+  { name_key:"ref_quantum",    name:"Quantum Refinery",      price:5000000,      storage:7500    },
+  { name_key:"ref_ice",        name:"Ice Refinery",          price:8000000,      storage:12500   },
+  { name_key:"ref_hell",       name:"Hell Refinery",         price:16000000,     storage:20000   },
+  { name_key:"ref_mega_q",     name:"Mega Quantum Refinery", price:90000000,     storage:100000  },
+  { name_key:"ref_mega_e",     name:"Mega Energy Refinery",  price:150000000,    storage:150000  },
+  { name_key:"ref_lava",       name:"Lava Refinery",         price:360000000,    storage:275000  },
+  { name_key:"ref_crystal",    name:"Crystal Refinery",      price:600000000,    storage:400000  },
+  { name_key:"ref_diamond",    name:"Diamond Refinery",      price:5000000000,   storage:1000000 },
+  { name_key:"ref_ruby",       name:"Ruby Refinery",         price:50000000000,  storage:5000000 },
 ];
 
 const drillCounts    = Object.fromEntries(DRILLS.map(d => [d.name, 0]));
 const refineryCounts = Object.fromEntries(REFINERIES.map(r => [r.name, 0]));
 
-function fmtNum(n) {
-  if (!isFinite(n) || n === null) return '—';
-  if (n >= 1e12) return '$' + (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
-  if (n >= 1e9)  return '$' + (n / 1e9).toFixed(2).replace(/\.?0+$/, '')  + 'B';
-  if (n >= 1e6)  return '$' + (n / 1e6).toFixed(2).replace(/\.?0+$/, '')  + 'M';
-  if (n >= 1e3)  return '$' + (n / 1e3).toFixed(2).replace(/\.?0+$/, '')  + 'K';
-  return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 2 });
-}
+const LANGS = {
+  en: {
+    nav_production:"Production Stats", nav_goals:"Goals", nav_layout:"Layout Designer",
+    nav_settings:"Settings", nav_about:"About",
+    rate_title:"Rate", stats_title:"Stats",
+    petrol_per_sec:"Petrol per second:", current_cash:"Current Cash (optional):",
+    save_config:"Save Config", saved:"Saved!",
+    petrol_hr:"Petrol/hr:", cash_hr:"Cash/hr:", cash_per_unit:"Cash per Unit:",
+    cpu_label:"Cash per Unit ($1 – $15)", boost_label:"Boost multiplier (100% – 285%)",
+    boost:"Boost:", gas_title:"Gas Profit Calculator",
+    gas_amount:"Gas Amount:", total_profit:"Total Profit:",
+    gas_desc:"Enter the amount of gas (petrol units) you have collected or plan to sell. This multiplies that quantity by your configured <b>Cash per Unit</b> and <b>Boost multiplier</b> to show the total cash you'll receive. Supports shorthand like <code>100k</code>, <code>2.5M</code>, or comma-separated numbers.",
+    more_calcs:"More calculations coming soon…",
+    goals_title:"Goals", drills:"Drills", refineries:"Refineries",
+    total_cost:"Total cost:", time_afford:"Time to afford:", selected:"selected",
+    cash_goal:"Cash Goal", goal_amount:"Goal Amount:", time_to_goal:"Time to goal:",
+    nav_layout:"Layout Designer", coming_soon:"Coming Soon",
+    layout_desc:"The Layout Designer is currently in development. Place and arrange drills, refineries, and totems on your base grid to optimise production.",
+    lang_heading:"Language", lang_desc:"Choose your preferred display language. Affects all labels, placeholders, and button text throughout the app.",
+    accent_heading:"Accent Color", accent_desc:"Changes the highlight color used for active nav items, buttons, focused inputs, and key values.",
+    about_title:"Oil Empire Calculator", app_desc:"A powerful calculator tool for Oil Empire optimisation. Calculate production rates, drill affordability, and track your cash goals.",
+    features:"Features", version:"Version", built_with:"Built With",
+    feat_1:"Production statistics and rates", feat_2:"Drill affordability calculator",
+    feat_3:"Cash goal tracker", feat_4:"Gas profit calculator",
+    feat_5:"Configurable sale price and totem boost multiplier", feat_6:"Layout designer (coming soon)",
+    storage:"storage", complete:"Complete!",
+    pps_ph:"e.g. 277,005 or 277005", cash_ph:"e.g. 16.9B or 16,900,000,000",
+    gas_ph:"e.g. 100k or 2,500,000", goal_ph:"e.g. 1B",
+    rate_unit:"/s",
+    drill_basic:"Basic Drill", drill_strong:"Strong Drill", drill_enhanced:"Enhanced Drill",
+    drill_speed:"Speed Drill", drill_reinforced:"Reinforced Drill", drill_industrial:"Industrial Drill",
+    drill_double:"Double Industrial Drill", drill_turbo:"Turbo Drill", drill_mega:"Mega Drill",
+    drill_mega_em:"Mega Emerald Drill", drill_hell:"Hell Drill", drill_plasma:"Plasma Drill",
+    drill_huge:"Huge Long Drill", drill_mega_pl:"Mega Plasma Drill", drill_multi:"Multi Drill",
+    drill_lava:"Lava Drill", drill_ice:"Ice Plasma Drill", drill_crystal:"Crystal Drill",
+    drill_diamond:"Diamond Drill", drill_ruby:"Ruby Drill",
+    ref_basic:"Basic Refinery", ref_enhanced:"Enhanced Refinery", ref_reinforced:"Reinforced Refinery",
+    ref_advanced:"Advanced Refinery", ref_plasma:"Plasma Refinery", ref_industrial:"Industrial Refinery",
+    ref_energy:"Energy Refinery", ref_mega:"Mega Refinery", ref_quantum:"Quantum Refinery",
+    ref_ice:"Ice Refinery", ref_hell:"Hell Refinery", ref_mega_q:"Mega Quantum Refinery",
+    ref_mega_e:"Mega Energy Refinery", ref_lava:"Lava Refinery", ref_crystal:"Crystal Refinery",
+    ref_diamond:"Diamond Refinery", ref_ruby:"Ruby Refinery",
+  },
+  es: {
+    nav_production:"Estadísticas", nav_goals:"Metas", nav_layout:"Diseñador",
+    nav_settings:"Ajustes", nav_about:"Acerca de",
+    rate_title:"Tasa", stats_title:"Estadísticas",
+    petrol_per_sec:"Petróleo por segundo:", current_cash:"Efectivo actual (opcional):",
+    save_config:"Guardar", saved:"¡Guardado!",
+    petrol_hr:"Petróleo/hr:", cash_hr:"Dinero/hr:", cash_per_unit:"Dinero por unidad:",
+    cpu_label:"Dinero por unidad ($1 – $15)", boost_label:"Multiplicador (100% – 285%)",
+    boost:"Boost:", gas_title:"Calcular ganancia de gas",
+    gas_amount:"Cantidad de gas:", total_profit:"Ganancia total:",
+    gas_desc:"Ingresa la cantidad de gas que tienes o planeas vender. Multiplica esa cantidad por tu <b>Dinero por Unidad</b> y tu <b>Multiplicador</b> para mostrar el total. Admite abreviaturas como <code>100k</code>, <code>2.5M</code>, o números con comas.",
+    more_calcs:"Más cálculos próximamente…",
+    goals_title:"Metas", drills:"Taladros", refineries:"Refinerías",
+    total_cost:"Costo total:", time_afford:"Tiempo para pagar:", selected:"seleccionados",
+    cash_goal:"Meta de dinero", goal_amount:"Cantidad meta:", time_to_goal:"Tiempo para llegar:",
+    coming_soon:"Próximamente",
+    layout_desc:"El Diseñador de Base está en desarrollo. Coloca taladros, refinerías y tótems en tu cuadrícula.",
+    lang_heading:"Idioma", lang_desc:"Elige tu idioma preferido.",
+    accent_heading:"Color de acento", accent_desc:"Cambia el color de resaltado en toda la app.",
+    about_title:"Oil Empire Calculator", app_desc:"Una potente calculadora para Oil Empire.",
+    features:"Características", version:"Versión", built_with:"Creado con",
+    feat_1:"Estadísticas de producción", feat_2:"Calculadora de taladros",
+    feat_3:"Seguimiento de metas", feat_4:"Calculadora de ganancia de gas",
+    feat_5:"Precio de venta y multiplicador configurables", feat_6:"Diseñador de base (próximamente)",
+    storage:"almacenamiento", complete:"¡Completo!", rate_unit:"/s",
+    pps_ph:"p.ej. 277,005", cash_ph:"p.ej. 16.9B", gas_ph:"p.ej. 100k", goal_ph:"p.ej. 1B",
+    drill_basic:"Taladro Básico", drill_strong:"Taladro Fuerte", drill_enhanced:"Taladro Mejorado",
+    drill_speed:"Taladro Veloz", drill_reinforced:"Taladro Reforzado", drill_industrial:"Taladro Industrial",
+    drill_double:"Taladro Doble Industrial", drill_turbo:"Taladro Turbo", drill_mega:"Mega Taladro",
+    drill_mega_em:"Mega Taladro Esmeralda", drill_hell:"Taladro Infernal", drill_plasma:"Taladro de Plasma",
+    drill_huge:"Taladro Grande", drill_mega_pl:"Mega Taladro de Plasma", drill_multi:"Multi Taladro",
+    drill_lava:"Taladro de Lava", drill_ice:"Taladro de Hielo y Plasma", drill_crystal:"Taladro de Cristal",
+    drill_diamond:"Taladro de Diamante", drill_ruby:"Taladro de Rubí",
+    ref_basic:"Refinería Básica", ref_enhanced:"Refinería Mejorada", ref_reinforced:"Refinería Reforzada",
+    ref_advanced:"Refinería Avanzada", ref_plasma:"Refinería de Plasma", ref_industrial:"Refinería Industrial",
+    ref_energy:"Refinería de Energía", ref_mega:"Mega Refinería", ref_quantum:"Refinería Cuántica",
+    ref_ice:"Refinería de Hielo", ref_hell:"Refinería Infernal", ref_mega_q:"Mega Refinería Cuántica",
+    ref_mega_e:"Mega Refinería de Energía", ref_lava:"Refinería de Lava", ref_crystal:"Refinería de Cristal",
+    ref_diamond:"Refinería de Diamante", ref_ruby:"Refinería de Rubí",
+  },
+  fr: {
+    nav_production:"Statistiques", nav_goals:"Objectifs", nav_layout:"Concepteur",
+    nav_settings:"Paramètres", nav_about:"À propos",
+    rate_title:"Taux", stats_title:"Statistiques",
+    petrol_per_sec:"Pétrole par seconde:", current_cash:"Argent actuel (optionnel):",
+    save_config:"Sauvegarder", saved:"Sauvegardé!",
+    petrol_hr:"Pétrole/hr:", cash_hr:"Argent/hr:", cash_per_unit:"Argent par unité:",
+    cpu_label:"Argent par unité ($1 – $15)", boost_label:"Multiplicateur (100% – 285%)",
+    boost:"Boost:", gas_title:"Calculer le profit du gaz",
+    gas_amount:"Quantité de gaz:", total_profit:"Profit total:",
+    gas_desc:"Entrez la quantité de gaz collectée ou à vendre. Multipliée par votre <b>Argent par Unité</b> et votre <b>Multiplicateur</b>. Prend en charge les abréviations comme <code>100k</code>, <code>2.5M</code>.",
+    more_calcs:"Plus de calculs bientôt…",
+    goals_title:"Objectifs", drills:"Foreuses", refineries:"Raffineries",
+    total_cost:"Coût total:", time_afford:"Temps pour payer:", selected:"sélectionnés",
+    cash_goal:"Objectif financier", goal_amount:"Montant cible:", time_to_goal:"Temps restant:",
+    coming_soon:"Bientôt disponible",
+    layout_desc:"Le Concepteur de Base est en développement.",
+    lang_heading:"Langue", lang_desc:"Choisissez votre langue.",
+    accent_heading:"Couleur d'accent", accent_desc:"Modifie la couleur d'accentuation.",
+    about_title:"Oil Empire Calculator", app_desc:"Un puissant outil pour Oil Empire.",
+    features:"Fonctionnalités", version:"Version", built_with:"Construit avec",
+    feat_1:"Statistiques de production", feat_2:"Calculateur de foreuses",
+    feat_3:"Suivi des objectifs", feat_4:"Calculateur de profit de gaz",
+    feat_5:"Prix de vente et multiplicateur configurables", feat_6:"Concepteur de base (bientôt)",
+    storage:"stockage", complete:"Complété!", rate_unit:"/s",
+    pps_ph:"ex. 277 005", cash_ph:"ex. 16,9B", gas_ph:"ex. 100k", goal_ph:"ex. 1B",
+    drill_basic:"Foreuse Basique", drill_strong:"Foreuse Puissante", drill_enhanced:"Foreuse Améliorée",
+    drill_speed:"Foreuse Rapide", drill_reinforced:"Foreuse Renforcée", drill_industrial:"Foreuse Industrielle",
+    drill_double:"Double Foreuse Industrielle", drill_turbo:"Foreuse Turbo", drill_mega:"Méga Foreuse",
+    drill_mega_em:"Méga Foreuse Émeraude", drill_hell:"Foreuse Infernale", drill_plasma:"Foreuse Plasma",
+    drill_huge:"Grande Foreuse", drill_mega_pl:"Méga Foreuse Plasma", drill_multi:"Multi Foreuse",
+    drill_lava:"Foreuse Lave", drill_ice:"Foreuse Plasma Glace", drill_crystal:"Foreuse Cristal",
+    drill_diamond:"Foreuse Diamant", drill_ruby:"Foreuse Rubis",
+    ref_basic:"Raffinerie Basique", ref_enhanced:"Raffinerie Améliorée", ref_reinforced:"Raffinerie Renforcée",
+    ref_advanced:"Raffinerie Avancée", ref_plasma:"Raffinerie Plasma", ref_industrial:"Raffinerie Industrielle",
+    ref_energy:"Raffinerie Énergie", ref_mega:"Méga Raffinerie", ref_quantum:"Raffinerie Quantique",
+    ref_ice:"Raffinerie Glace", ref_hell:"Raffinerie Infernale", ref_mega_q:"Méga Raffinerie Quantique",
+    ref_mega_e:"Méga Raffinerie Énergie", ref_lava:"Raffinerie Lave", ref_crystal:"Raffinerie Cristal",
+    ref_diamond:"Raffinerie Diamant", ref_ruby:"Raffinerie Rubis",
+  },
+  de: {
+    nav_production:"Produktion", nav_goals:"Ziele", nav_layout:"Layout-Designer",
+    nav_settings:"Einstellungen", nav_about:"Über",
+    rate_title:"Rate", stats_title:"Statistiken",
+    petrol_per_sec:"Benzin pro Sekunde:", current_cash:"Aktuelles Geld (optional):",
+    save_config:"Speichern", saved:"Gespeichert!",
+    petrol_hr:"Benzin/Std:", cash_hr:"Geld/Std:", cash_per_unit:"Geld pro Einheit:",
+    cpu_label:"Geld pro Einheit ($1 – $15)", boost_label:"Multiplikator (100% – 285%)",
+    boost:"Boost:", gas_title:"Gasgewinn berechnen",
+    gas_amount:"Gasmenge:", total_profit:"Gesamtgewinn:",
+    gas_desc:"Gib die Gasmenge ein, die du gesammelt hast oder verkaufen möchtest. Multipliziert mit <b>Geld pro Einheit</b> und <b>Multiplikator</b>. Unterstützt Abkürzungen wie <code>100k</code>, <code>2,5M</code>.",
+    more_calcs:"Weitere Berechnungen demnächst…",
+    goals_title:"Ziele", drills:"Bohrer", refineries:"Raffinerien",
+    total_cost:"Gesamtkosten:", time_afford:"Zeit zum Leisten:", selected:"ausgewählt",
+    cash_goal:"Geldziel", goal_amount:"Zielbetrag:", time_to_goal:"Verbleibende Zeit:",
+    coming_soon:"Demnächst",
+    layout_desc:"Der Layout-Designer ist in Entwicklung.",
+    lang_heading:"Sprache", lang_desc:"Wähle deine bevorzugte Sprache.",
+    accent_heading:"Akzentfarbe", accent_desc:"Ändert die Hervorhebungsfarbe in der App.",
+    about_title:"Oil Empire Calculator", app_desc:"Ein leistungsstarkes Berechnungswerkzeug für Oil Empire.",
+    features:"Funktionen", version:"Version", built_with:"Erstellt mit",
+    feat_1:"Produktionsstatistiken", feat_2:"Bohrer-Rechner",
+    feat_3:"Zieltracker", feat_4:"Gasgewinn-Rechner",
+    feat_5:"Konfigurierbarer Verkaufspreis und Boost", feat_6:"Layout-Designer (demnächst)",
+    storage:"Speicher", complete:"Abgeschlossen!", rate_unit:"/s",
+    pps_ph:"z.B. 277.005", cash_ph:"z.B. 16,9B", gas_ph:"z.B. 100k", goal_ph:"z.B. 1B",
+    drill_basic:"Basisbohrer", drill_strong:"Starker Bohrer", drill_enhanced:"Verbesserter Bohrer",
+    drill_speed:"Schnellbohrer", drill_reinforced:"Verstärkter Bohrer", drill_industrial:"Industriebohrer",
+    drill_double:"Doppelter Industriebohrer", drill_turbo:"Turbobohrer", drill_mega:"Mega-Bohrer",
+    drill_mega_em:"Mega-Smaragdbohrer", drill_hell:"Höllenbohrer", drill_plasma:"Plasmabohrer",
+    drill_huge:"Großer Bohrer", drill_mega_pl:"Mega-Plasmabohrer", drill_multi:"Multi-Bohrer",
+    drill_lava:"Lava-Bohrer", drill_ice:"Eis-Plasma-Bohrer", drill_crystal:"Kristallbohrer",
+    drill_diamond:"Diamantbohrer", drill_ruby:"Rubinbohrer",
+    ref_basic:"Basisraffinerie", ref_enhanced:"Verbesserte Raffinerie", ref_reinforced:"Verstärkte Raffinerie",
+    ref_advanced:"Erweiterte Raffinerie", ref_plasma:"Plasmaraffinerie", ref_industrial:"Industrieraffinerie",
+    ref_energy:"Energieraffinerie", ref_mega:"Mega-Raffinerie", ref_quantum:"Quantenraffinerie",
+    ref_ice:"Eisraffinerie", ref_hell:"Höllenraffinerie", ref_mega_q:"Mega-Quantenraffinerie",
+    ref_mega_e:"Mega-Energieraffinerie", ref_lava:"Lavaraffinerie", ref_crystal:"Kristallraffinerie",
+    ref_diamond:"Diamantraffinerie", ref_ruby:"Rubinraffinerie",
+  },
+  pt: {
+    nav_production:"Produção", nav_goals:"Objetivos", nav_layout:"Designer",
+    nav_settings:"Configurações", nav_about:"Sobre",
+    rate_title:"Taxa", stats_title:"Estatísticas",
+    petrol_per_sec:"Petróleo por segundo:", current_cash:"Dinheiro atual (opcional):",
+    save_config:"Salvar", saved:"Salvo!",
+    petrol_hr:"Petróleo/hr:", cash_hr:"Dinheiro/hr:", cash_per_unit:"Dinheiro por unidade:",
+    cpu_label:"Dinheiro por unidade ($1 – $15)", boost_label:"Multiplicador (100% – 285%)",
+    boost:"Boost:", gas_title:"Calcular lucro do gás",
+    gas_amount:"Quantidade de gás:", total_profit:"Lucro total:",
+    gas_desc:"Insira a quantidade de gás coletada ou a vender. Multiplica pelo <b>Dinheiro por Unidade</b> e <b>Multiplicador</b>. Suporta abreviações como <code>100k</code>, <code>2,5M</code>.",
+    more_calcs:"Mais cálculos em breve…",
+    goals_title:"Objetivos", drills:"Brocas", refineries:"Refinarias",
+    total_cost:"Custo total:", time_afford:"Tempo para pagar:", selected:"selecionados",
+    cash_goal:"Meta de dinheiro", goal_amount:"Valor da meta:", time_to_goal:"Tempo restante:",
+    coming_soon:"Em breve",
+    layout_desc:"O Designer de Base está em desenvolvimento.",
+    lang_heading:"Idioma", lang_desc:"Escolha seu idioma preferido.",
+    accent_heading:"Cor de destaque", accent_desc:"Altera a cor de destaque em todo o app.",
+    about_title:"Oil Empire Calculator", app_desc:"Uma poderosa ferramenta para Oil Empire.",
+    features:"Recursos", version:"Versão", built_with:"Feito com",
+    feat_1:"Estatísticas de produção", feat_2:"Calculadora de brocas",
+    feat_3:"Rastreador de metas", feat_4:"Calculadora de lucro de gás",
+    feat_5:"Preço e multiplicador configuráveis", feat_6:"Designer de base (em breve)",
+    storage:"armazenamento", complete:"Completo!", rate_unit:"/s",
+    pps_ph:"ex. 277.005", cash_ph:"ex. 16,9B", gas_ph:"ex. 100k", goal_ph:"ex. 1B",
+    drill_basic:"Broca Básica", drill_strong:"Broca Forte", drill_enhanced:"Broca Melhorada",
+    drill_speed:"Broca Veloz", drill_reinforced:"Broca Reforçada", drill_industrial:"Broca Industrial",
+    drill_double:"Broca Dupla Industrial", drill_turbo:"Broca Turbo", drill_mega:"Mega Broca",
+    drill_mega_em:"Mega Broca Esmeralda", drill_hell:"Broca Infernal", drill_plasma:"Broca de Plasma",
+    drill_huge:"Broca Grande", drill_mega_pl:"Mega Broca de Plasma", drill_multi:"Multi Broca",
+    drill_lava:"Broca de Lava", drill_ice:"Broca de Gelo e Plasma", drill_crystal:"Broca de Cristal",
+    drill_diamond:"Broca de Diamante", drill_ruby:"Broca de Rubi",
+    ref_basic:"Refinaria Básica", ref_enhanced:"Refinaria Melhorada", ref_reinforced:"Refinaria Reforçada",
+    ref_advanced:"Refinaria Avançada", ref_plasma:"Refinaria de Plasma", ref_industrial:"Refinaria Industrial",
+    ref_energy:"Refinaria de Energia", ref_mega:"Mega Refinaria", ref_quantum:"Refinaria Quântica",
+    ref_ice:"Refinaria de Gelo", ref_hell:"Refinaria Infernal", ref_mega_q:"Mega Refinaria Quântica",
+    ref_mega_e:"Mega Refinaria de Energia", ref_lava:"Refinaria de Lava", ref_crystal:"Refinaria de Cristal",
+    ref_diamond:"Refinaria de Diamante", ref_ruby:"Refinaria de Rubi",
+  },
+  zh: {
+    nav_production:"生产统计", nav_goals:"目标", nav_layout:"布局设计",
+    nav_settings:"设置", nav_about:"关于",
+    rate_title:"速率", stats_title:"统计",
+    petrol_per_sec:"每秒石油:", current_cash:"当前现金（可选）:",
+    save_config:"保存配置", saved:"已保存！",
+    petrol_hr:"石油/时:", cash_hr:"现金/时:", cash_per_unit:"每单位现金:",
+    cpu_label:"每单位现金 ($1 – $15)", boost_label:"加速倍率 (100% – 285%)",
+    boost:"加速:", gas_title:"天然气利润计算",
+    gas_amount:"天然气数量:", total_profit:"总利润:",
+    gas_desc:"输入您收集或计划出售的天然气数量。乘以您的<b>每单位现金</b>和<b>加速倍率</b>。支持如<code>100k</code>、<code>2.5M</code>等简写。",
+    more_calcs:"更多计算即将推出…",
+    goals_title:"目标", drills:"钻头", refineries:"炼油厂",
+    total_cost:"总费用:", time_afford:"支付时间:", selected:"已选",
+    cash_goal:"现金目标", goal_amount:"目标金额:", time_to_goal:"剩余时间:",
+    coming_soon:"即将推出",
+    layout_desc:"布局设计器正在开发中。",
+    lang_heading:"语言", lang_desc:"选择您的首选显示语言。",
+    accent_heading:"主题颜色", accent_desc:"更改应用程序中的强调色。",
+    about_title:"Oil Empire 计算器", app_desc:"强大的 Oil Empire 计算工具。",
+    features:"功能", version:"版本", built_with:"技术栈",
+    feat_1:"生产统计", feat_2:"钻头计算器",
+    feat_3:"现金目标追踪", feat_4:"天然气利润计算器",
+    feat_5:"可配置售价和加速倍率", feat_6:"布局设计器（即将推出）",
+    storage:"储量", complete:"已完成！", rate_unit:"/秒",
+    pps_ph:"例如 277005", cash_ph:"例如 16.9B", gas_ph:"例如 100k", goal_ph:"例如 1B",
+    drill_basic:"基础钻头", drill_strong:"强力钻头", drill_enhanced:"增强钻头",
+    drill_speed:"速度钻头", drill_reinforced:"加固钻头", drill_industrial:"工业钻头",
+    drill_double:"双工业钻头", drill_turbo:"涡轮钻头", drill_mega:"超级钻头",
+    drill_mega_em:"超级祖母绿钻头", drill_hell:"地狱钻头", drill_plasma:"等离子钻头",
+    drill_huge:"巨型钻头", drill_mega_pl:"超级等离子钻头", drill_multi:"多功能钻头",
+    drill_lava:"熔岩钻头", drill_ice:"冰等离子钻头", drill_crystal:"水晶钻头",
+    drill_diamond:"钻石钻头", drill_ruby:"红宝石钻头",
+    ref_basic:"基础炼油厂", ref_enhanced:"增强炼油厂", ref_reinforced:"加固炼油厂",
+    ref_advanced:"高级炼油厂", ref_plasma:"等离子炼油厂", ref_industrial:"工业炼油厂",
+    ref_energy:"能源炼油厂", ref_mega:"超级炼油厂", ref_quantum:"量子炼油厂",
+    ref_ice:"冰炼油厂", ref_hell:"地狱炼油厂", ref_mega_q:"超级量子炼油厂",
+    ref_mega_e:"超级能源炼油厂", ref_lava:"熔岩炼油厂", ref_crystal:"水晶炼油厂",
+    ref_diamond:"钻石炼油厂", ref_ruby:"红宝石炼油厂",
+  },
+  ja: {
+    nav_production:"生産統計", nav_goals:"目標", nav_layout:"レイアウト",
+    nav_settings:"設定", nav_about:"について",
+    rate_title:"レート", stats_title:"統計",
+    petrol_per_sec:"毎秒石油:", current_cash:"現在の現金（任意）:",
+    save_config:"保存", saved:"保存しました！",
+    petrol_hr:"石油/時:", cash_hr:"現金/時:", cash_per_unit:"単位あたりの現金:",
+    cpu_label:"単位あたりの現金 ($1 – $15)", boost_label:"ブースト (100% – 285%)",
+    boost:"ブースト:", gas_title:"ガス利益計算",
+    gas_amount:"ガス量:", total_profit:"総利益:",
+    gas_desc:"収集または売却予定のガス量を入力してください。<b>単位あたりの現金</b>と<b>ブースト</b>で乗算します。<code>100k</code>、<code>2.5M</code>などの略語に対応。",
+    more_calcs:"計算はもっと追加予定…",
+    goals_title:"目標", drills:"ドリル", refineries:"精製所",
+    total_cost:"合計費用:", time_afford:"購入までの時間:", selected:"選択済み",
+    cash_goal:"現金目標", goal_amount:"目標額:", time_to_goal:"残り時間:",
+    coming_soon:"近日公開",
+    layout_desc:"レイアウトデザイナーは開発中です。",
+    lang_heading:"言語", lang_desc:"表示言語を選択してください。",
+    accent_heading:"アクセントカラー", accent_desc:"アプリのハイライトカラーを変更します。",
+    about_title:"Oil Empire 計算機", app_desc:"Oil Empire向けの強力な計算ツール。",
+    features:"機能", version:"バージョン", built_with:"使用技術",
+    feat_1:"生産統計", feat_2:"ドリル計算機",
+    feat_3:"現金目標トラッカー", feat_4:"ガス利益計算機",
+    feat_5:"販売価格とブーストの設定", feat_6:"レイアウトデザイナー（近日公開）",
+    storage:"ストレージ", complete:"完了！", rate_unit:"/秒",
+    pps_ph:"例: 277005", cash_ph:"例: 16.9B", gas_ph:"例: 100k", goal_ph:"例: 1B",
+    drill_basic:"基本ドリル", drill_strong:"強力ドリル", drill_enhanced:"強化ドリル",
+    drill_speed:"高速ドリル", drill_reinforced:"強化ドリル", drill_industrial:"産業ドリル",
+    drill_double:"ダブル産業ドリル", drill_turbo:"ターボドリル", drill_mega:"メガドリル",
+    drill_mega_em:"メガエメラルドドリル", drill_hell:"地獄ドリル", drill_plasma:"プラズマドリル",
+    drill_huge:"巨大ドリル", drill_mega_pl:"メガプラズマドリル", drill_multi:"マルチドリル",
+    drill_lava:"溶岩ドリル", drill_ice:"氷プラズマドリル", drill_crystal:"クリスタルドリル",
+    drill_diamond:"ダイヤモンドドリル", drill_ruby:"ルビードリル",
+    ref_basic:"基本精製所", ref_enhanced:"強化精製所", ref_reinforced:"補強精製所",
+    ref_advanced:"高度精製所", ref_plasma:"プラズマ精製所", ref_industrial:"産業精製所",
+    ref_energy:"エネルギー精製所", ref_mega:"メガ精製所", ref_quantum:"量子精製所",
+    ref_ice:"氷精製所", ref_hell:"地獄精製所", ref_mega_q:"メガ量子精製所",
+    ref_mega_e:"メガエネルギー精製所", ref_lava:"溶岩精製所", ref_crystal:"クリスタル精製所",
+    ref_diamond:"ダイヤモンド精製所", ref_ruby:"ルビー精製所",
+  },
+  ko: {
+    nav_production:"생산 통계", nav_goals:"목표", nav_layout:"레이아웃",
+    nav_settings:"설정", nav_about:"정보",
+    rate_title:"속도", stats_title:"통계",
+    petrol_per_sec:"초당 석유:", current_cash:"현재 현금 (선택):",
+    save_config:"저장", saved:"저장됨!",
+    petrol_hr:"석유/시:", cash_hr:"현금/시:", cash_per_unit:"단위당 현금:",
+    cpu_label:"단위당 현금 ($1 – $15)", boost_label:"부스트 (100% – 285%)",
+    boost:"부스트:", gas_title:"가스 수익 계산",
+    gas_amount:"가스 양:", total_profit:"총 수익:",
+    gas_desc:"수집하거나 판매할 가스 양을 입력하세요. <b>단위당 현금</b>과 <b>부스트</b>를 곱하여 총 수익을 보여줍니다. <code>100k</code>, <code>2.5M</code> 등의 약어를 지원합니다.",
+    more_calcs:"더 많은 계산 곧 출시…",
+    goals_title:"목표", drills:"드릴", refineries:"정제소",
+    total_cost:"총 비용:", time_afford:"구매까지 시간:", selected:"선택됨",
+    cash_goal:"현금 목표", goal_amount:"목표 금액:", time_to_goal:"남은 시간:",
+    coming_soon:"출시 예정",
+    layout_desc:"레이아웃 디자이너는 개발 중입니다.",
+    lang_heading:"언어", lang_desc:"표시 언어를 선택하세요.",
+    accent_heading:"강조 색상", accent_desc:"앱 전체의 강조 색상을 변경합니다.",
+    about_title:"Oil Empire 계산기", app_desc:"Oil Empire를 위한 강력한 계산 도구.",
+    features:"기능", version:"버전", built_with:"사용 기술",
+    feat_1:"생산 통계", feat_2:"드릴 계산기",
+    feat_3:"현금 목표 추적", feat_4:"가스 수익 계산기",
+    feat_5:"판매 가격 및 부스트 설정 가능", feat_6:"레이아웃 디자이너 (출시 예정)",
+    storage:"저장소", complete:"완료!", rate_unit:"/초",
+    pps_ph:"예: 277005", cash_ph:"예: 16.9B", gas_ph:"예: 100k", goal_ph:"예: 1B",
+    drill_basic:"기본 드릴", drill_strong:"강력 드릴", drill_enhanced:"강화 드릴",
+    drill_speed:"속도 드릴", drill_reinforced:"보강 드릴", drill_industrial:"산업 드릴",
+    drill_double:"이중 산업 드릴", drill_turbo:"터보 드릴", drill_mega:"메가 드릴",
+    drill_mega_em:"메가 에메랄드 드릴", drill_hell:"지옥 드릴", drill_plasma:"플라즈마 드릴",
+    drill_huge:"초대형 드릴", drill_mega_pl:"메가 플라즈마 드릴", drill_multi:"멀티 드릴",
+    drill_lava:"용암 드릴", drill_ice:"아이스 플라즈마 드릴", drill_crystal:"크리스탈 드릴",
+    drill_diamond:"다이아몬드 드릴", drill_ruby:"루비 드릴",
+    ref_basic:"기본 정제소", ref_enhanced:"강화 정제소", ref_reinforced:"보강 정제소",
+    ref_advanced:"고급 정제소", ref_plasma:"플라즈마 정제소", ref_industrial:"산업 정제소",
+    ref_energy:"에너지 정제소", ref_mega:"메가 정제소", ref_quantum:"양자 정제소",
+    ref_ice:"아이스 정제소", ref_hell:"지옥 정제소", ref_mega_q:"메가 양자 정제소",
+    ref_mega_e:"메가 에너지 정제소", ref_lava:"용암 정제소", ref_crystal:"크리스탈 정제소",
+    ref_diamond:"다이아몬드 정제소", ref_ruby:"루비 정제소",
+  },
+  ru: {
+    nav_production:"Производство", nav_goals:"Цели", nav_layout:"Дизайнер",
+    nav_settings:"Настройки", nav_about:"О приложении",
+    rate_title:"Скорость", stats_title:"Статистика",
+    petrol_per_sec:"Нефть в секунду:", current_cash:"Текущие деньги (необязательно):",
+    save_config:"Сохранить", saved:"Сохранено!",
+    petrol_hr:"Нефть/час:", cash_hr:"Деньги/час:", cash_per_unit:"Денег за единицу:",
+    cpu_label:"Денег за единицу ($1 – $15)", boost_label:"Множитель (100% – 285%)",
+    boost:"Буст:", gas_title:"Расчёт прибыли от газа",
+    gas_amount:"Количество газа:", total_profit:"Общая прибыль:",
+    gas_desc:"Введите количество газа для продажи. Умножается на <b>Деньги за единицу</b> и <b>Множитель</b>. Поддерживаются сокращения: <code>100k</code>, <code>2.5M</code>.",
+    more_calcs:"Больше расчётов скоро…",
+    goals_title:"Цели", drills:"Буровые", refineries:"Заводы",
+    total_cost:"Общая стоимость:", time_afford:"Время до покупки:", selected:"выбрано",
+    cash_goal:"Цель по деньгам", goal_amount:"Целевая сумма:", time_to_goal:"Оставшееся время:",
+    coming_soon:"Скоро",
+    layout_desc:"Дизайнер базы находится в разработке.",
+    lang_heading:"Язык", lang_desc:"Выберите предпочитаемый язык.",
+    accent_heading:"Цвет акцента", accent_desc:"Изменяет цвет выделения в приложении.",
+    about_title:"Oil Empire Калькулятор", app_desc:"Мощный инструмент для Oil Empire.",
+    features:"Возможности", version:"Версия", built_with:"Создано с помощью",
+    feat_1:"Статистика производства", feat_2:"Расчёт буровых",
+    feat_3:"Отслеживание целей", feat_4:"Расчёт прибыли от газа",
+    feat_5:"Настраиваемая цена и множитель", feat_6:"Дизайнер базы (скоро)",
+    storage:"хранилище", complete:"Готово!", rate_unit:"/с",
+    pps_ph:"напр. 277005", cash_ph:"напр. 16.9B", gas_ph:"напр. 100k", goal_ph:"напр. 1B",
+    drill_basic:"Базовая буровая", drill_strong:"Мощная буровая", drill_enhanced:"Улучшенная буровая",
+    drill_speed:"Скоростная буровая", drill_reinforced:"Усиленная буровая", drill_industrial:"Промышленная буровая",
+    drill_double:"Двойная промышленная", drill_turbo:"Турбо буровая", drill_mega:"Мега буровая",
+    drill_mega_em:"Мега изумрудная", drill_hell:"Адская буровая", drill_plasma:"Плазменная буровая",
+    drill_huge:"Огромная буровая", drill_mega_pl:"Мега плазменная", drill_multi:"Мульти буровая",
+    drill_lava:"Лавовая буровая", drill_ice:"Ледяная плазменная", drill_crystal:"Кристальная буровая",
+    drill_diamond:"Алмазная буровая", drill_ruby:"Рубиновая буровая",
+    ref_basic:"Базовый завод", ref_enhanced:"Улучшенный завод", ref_reinforced:"Усиленный завод",
+    ref_advanced:"Продвинутый завод", ref_plasma:"Плазменный завод", ref_industrial:"Промышленный завод",
+    ref_energy:"Энергетический завод", ref_mega:"Мега завод", ref_quantum:"Квантовый завод",
+    ref_ice:"Ледяной завод", ref_hell:"Адский завод", ref_mega_q:"Мега квантовый завод",
+    ref_mega_e:"Мега энергетический завод", ref_lava:"Лавовый завод", ref_crystal:"Кристальный завод",
+    ref_diamond:"Алмазный завод", ref_ruby:"Рубиновый завод",
+  },
+  ar: {
+    nav_production:"إحصائيات", nav_goals:"الأهداف", nav_layout:"المصمم",
+    nav_settings:"الإعدادات", nav_about:"حول",
+    rate_title:"المعدل", stats_title:"الإحصائيات",
+    petrol_per_sec:"نفط في الثانية:", current_cash:"النقد الحالي (اختياري):",
+    save_config:"حفظ", saved:"تم الحفظ!",
+    petrol_hr:"نفط/ساعة:", cash_hr:"نقد/ساعة:", cash_per_unit:"نقد لكل وحدة:",
+    cpu_label:"نقد لكل وحدة ($1 – $15)", boost_label:"المضاعف (100% – 285%)",
+    boost:"تعزيز:", gas_title:"حساب ربح الغاز",
+    gas_amount:"كمية الغاز:", total_profit:"إجمالي الربح:",
+    gas_desc:"أدخل كمية الغاز المجمعة أو المراد بيعها. مضروبة في <b>النقد لكل وحدة</b> و<b>المضاعف</b>. يدعم الاختصارات مثل <code>100k</code>، <code>2.5M</code>.",
+    more_calcs:"المزيد من الحسابات قريباً…",
+    goals_title:"الأهداف", drills:"المثاقب", refineries:"المصافي",
+    total_cost:"التكلفة الإجمالية:", time_afford:"وقت الشراء:", selected:"محدد",
+    cash_goal:"هدف النقد", goal_amount:"مبلغ الهدف:", time_to_goal:"الوقت المتبقي:",
+    coming_soon:"قريباً",
+    layout_desc:"مصمم القاعدة قيد التطوير.",
+    lang_heading:"اللغة", lang_desc:"اختر لغتك المفضلة.",
+    accent_heading:"لون التمييز", accent_desc:"يغير لون التمييز في جميع أنحاء التطبيق.",
+    about_title:"حاسبة Oil Empire", app_desc:"أداة حسابية قوية لـ Oil Empire.",
+    features:"الميزات", version:"الإصدار", built_with:"تم البناء باستخدام",
+    feat_1:"إحصائيات الإنتاج", feat_2:"حاسبة المثاقب",
+    feat_3:"تتبع الأهداف", feat_4:"حاسبة ربح الغاز",
+    feat_5:"سعر بيع ومضاعف قابلان للضبط", feat_6:"مصمم القاعدة (قريباً)",
+    storage:"تخزين", complete:"مكتمل!", rate_unit:"/ث",
+    pps_ph:"مثال: 277005", cash_ph:"مثال: 16.9B", gas_ph:"مثال: 100k", goal_ph:"مثال: 1B",
+    drill_basic:"مثقب أساسي", drill_strong:"مثقب قوي", drill_enhanced:"مثقب محسّن",
+    drill_speed:"مثقب سريع", drill_reinforced:"مثقب مقوّى", drill_industrial:"مثقب صناعي",
+    drill_double:"مثقب صناعي مزدوج", drill_turbo:"مثقب توربو", drill_mega:"ميغا مثقب",
+    drill_mega_em:"ميغا مثقب زمرد", drill_hell:"مثقب جهنمي", drill_plasma:"مثقب بلازما",
+    drill_huge:"مثقب ضخم", drill_mega_pl:"ميغا مثقب بلازما", drill_multi:"مثقب متعدد",
+    drill_lava:"مثقب حمم", drill_ice:"مثقب جليد بلازما", drill_crystal:"مثقب كريستال",
+    drill_diamond:"مثقب ألماس", drill_ruby:"مثقب ياقوت",
+    ref_basic:"مصفاة أساسية", ref_enhanced:"مصفاة محسّنة", ref_reinforced:"مصفاة مقوّاة",
+    ref_advanced:"مصفاة متقدمة", ref_plasma:"مصفاة بلازما", ref_industrial:"مصفاة صناعية",
+    ref_energy:"مصفاة طاقة", ref_mega:"ميغا مصفاة", ref_quantum:"مصفاة كمومية",
+    ref_ice:"مصفاة جليد", ref_hell:"مصفاة جهنمية", ref_mega_q:"ميغا مصفاة كمومية",
+    ref_mega_e:"ميغا مصفاة طاقة", ref_lava:"مصفاة حمم", ref_crystal:"مصفاة كريستال",
+    ref_diamond:"مصفاة ألماس", ref_ruby:"مصفاة ياقوت",
+  },
+  tr: {
+    nav_production:"Üretim", nav_goals:"Hedefler", nav_layout:"Tasarımcı",
+    nav_settings:"Ayarlar", nav_about:"Hakkında",
+    rate_title:"Hız", stats_title:"İstatistikler",
+    petrol_per_sec:"Saniyede petrol:", current_cash:"Mevcut nakit (isteğe bağlı):",
+    save_config:"Kaydet", saved:"Kaydedildi!",
+    petrol_hr:"Petrol/saat:", cash_hr:"Nakit/saat:", cash_per_unit:"Birim başına nakit:",
+    cpu_label:"Birim başına nakit ($1 – $15)", boost_label:"Çarpan (100% – 285%)",
+    boost:"Güç:", gas_title:"Gaz kârı hesapla",
+    gas_amount:"Gaz miktarı:", total_profit:"Toplam kâr:",
+    gas_desc:"Satılacak gaz miktarını girin. <b>Birim başına nakit</b> ve <b>Çarpan</b> ile çarpılır. <code>100k</code>, <code>2,5M</code> gibi kısaltmaları destekler.",
+    more_calcs:"Daha fazla hesaplama yakında…",
+    goals_title:"Hedefler", drills:"Matkaplar", refineries:"Rafineriler",
+    total_cost:"Toplam maliyet:", time_afford:"Satın alma süresi:", selected:"seçildi",
+    cash_goal:"Nakit hedefi", goal_amount:"Hedef tutar:", time_to_goal:"Kalan süre:",
+    coming_soon:"Yakında",
+    layout_desc:"Yerleşim Tasarımcısı geliştirme aşamasındadır.",
+    lang_heading:"Dil", lang_desc:"Tercih ettiğiniz dili seçin.",
+    accent_heading:"Vurgu rengi", accent_desc:"Uygulamadaki vurgu rengini değiştirir.",
+    about_title:"Oil Empire Hesaplayıcı", app_desc:"Oil Empire için güçlü bir hesap aracı.",
+    features:"Özellikler", version:"Sürüm", built_with:"Yapıldığı teknolojiler",
+    feat_1:"Üretim istatistikleri", feat_2:"Matkap hesaplayıcı",
+    feat_3:"Nakit hedef takibi", feat_4:"Gaz kârı hesaplayıcı",
+    feat_5:"Yapılandırılabilir fiyat ve çarpan", feat_6:"Yerleşim tasarımcısı (yakında)",
+    storage:"depolama", complete:"Tamamlandı!", rate_unit:"/s",
+    pps_ph:"örn. 277.005", cash_ph:"örn. 16,9B", gas_ph:"örn. 100k", goal_ph:"örn. 1B",
+    drill_basic:"Temel Matkap", drill_strong:"Güçlü Matkap", drill_enhanced:"Gelişmiş Matkap",
+    drill_speed:"Hızlı Matkap", drill_reinforced:"Güçlendirilmiş Matkap", drill_industrial:"Endüstriyel Matkap",
+    drill_double:"Çift Endüstriyel Matkap", drill_turbo:"Turbo Matkap", drill_mega:"Mega Matkap",
+    drill_mega_em:"Mega Zümrüt Matkap", drill_hell:"Cehennem Matkabı", drill_plasma:"Plazma Matkabı",
+    drill_huge:"Dev Matkap", drill_mega_pl:"Mega Plazma Matkabı", drill_multi:"Çok Fonksiyonlu Matkap",
+    drill_lava:"Lav Matkabı", drill_ice:"Buz Plazma Matkabı", drill_crystal:"Kristal Matkap",
+    drill_diamond:"Elmas Matkap", drill_ruby:"Yakut Matkap",
+    ref_basic:"Temel Rafineri", ref_enhanced:"Gelişmiş Rafineri", ref_reinforced:"Güçlendirilmiş Rafineri",
+    ref_advanced:"İleri Rafineri", ref_plasma:"Plazma Rafineri", ref_industrial:"Endüstriyel Rafineri",
+    ref_energy:"Enerji Rafineri", ref_mega:"Mega Rafineri", ref_quantum:"Kuantum Rafineri",
+    ref_ice:"Buz Rafineri", ref_hell:"Cehennem Rafineri", ref_mega_q:"Mega Kuantum Rafineri",
+    ref_mega_e:"Mega Enerji Rafineri", ref_lava:"Lav Rafineri", ref_crystal:"Kristal Rafineri",
+    ref_diamond:"Elmas Rafineri", ref_ruby:"Yakut Rafineri",
+  },
+  pl: {
+    nav_production:"Produkcja", nav_goals:"Cele", nav_layout:"Projektant",
+    nav_settings:"Ustawienia", nav_about:"O aplikacji",
+    rate_title:"Prędkość", stats_title:"Statystyki",
+    petrol_per_sec:"Ropa na sekundę:", current_cash:"Obecna gotówka (opcjonalnie):",
+    save_config:"Zapisz", saved:"Zapisano!",
+    petrol_hr:"Ropa/godz:", cash_hr:"Gotówka/godz:", cash_per_unit:"Gotówka za jednostkę:",
+    cpu_label:"Gotówka za jednostkę ($1 – $15)", boost_label:"Mnożnik (100% – 285%)",
+    boost:"Wzmocnienie:", gas_title:"Oblicz zysk z gazu",
+    gas_amount:"Ilość gazu:", total_profit:"Łączny zysk:",
+    gas_desc:"Wpisz ilość gazu do sprzedania. Mnożone przez <b>Gotówkę za jednostkę</b> i <b>Mnożnik</b>. Obsługuje skróty takie jak <code>100k</code>, <code>2,5M</code>.",
+    more_calcs:"Więcej obliczeń wkrótce…",
+    goals_title:"Cele", drills:"Wiertła", refineries:"Rafinerie",
+    total_cost:"Łączny koszt:", time_afford:"Czas do zakupu:", selected:"wybranych",
+    cash_goal:"Cel gotówkowy", goal_amount:"Kwota celu:", time_to_goal:"Pozostały czas:",
+    coming_soon:"Wkrótce",
+    layout_desc:"Projektant układu jest w trakcie tworzenia.",
+    lang_heading:"Język", lang_desc:"Wybierz preferowany język.",
+    accent_heading:"Kolor akcentu", accent_desc:"Zmienia kolor akcentu w całej aplikacji.",
+    about_title:"Oil Empire Kalkulator", app_desc:"Potężne narzędzie obliczeniowe dla Oil Empire.",
+    features:"Funkcje", version:"Wersja", built_with:"Zbudowano z",
+    feat_1:"Statystyki produkcji", feat_2:"Kalkulator wierteł",
+    feat_3:"Śledzenie celów", feat_4:"Kalkulator zysku z gazu",
+    feat_5:"Konfigurowalny mnożnik i cena", feat_6:"Projektant układu (wkrótce)",
+    storage:"pojemność", complete:"Ukończono!", rate_unit:"/s",
+    pps_ph:"np. 277 005", cash_ph:"np. 16,9B", gas_ph:"np. 100k", goal_ph:"np. 1B",
+    drill_basic:"Podstawowe wiertło", drill_strong:"Mocne wiertło", drill_enhanced:"Ulepszone wiertło",
+    drill_speed:"Szybkie wiertło", drill_reinforced:"Wzmocnione wiertło", drill_industrial:"Przemysłowe wiertło",
+    drill_double:"Podwójne przemysłowe", drill_turbo:"Turbo wiertło", drill_mega:"Mega wiertło",
+    drill_mega_em:"Mega szmaragdowe", drill_hell:"Piekielne wiertło", drill_plasma:"Plazmowe wiertło",
+    drill_huge:"Ogromne wiertło", drill_mega_pl:"Mega plazmowe", drill_multi:"Multi wiertło",
+    drill_lava:"Lawowe wiertło", drill_ice:"Lodowe plazmowe", drill_crystal:"Kryształowe wiertło",
+    drill_diamond:"Diamentowe wiertło", drill_ruby:"Rubinowe wiertło",
+    ref_basic:"Podstawowa rafineria", ref_enhanced:"Ulepszona rafineria", ref_reinforced:"Wzmocniona rafineria",
+    ref_advanced:"Zaawansowana rafineria", ref_plasma:"Plazmowa rafineria", ref_industrial:"Przemysłowa rafineria",
+    ref_energy:"Energetyczna rafineria", ref_mega:"Mega rafineria", ref_quantum:"Kwantowa rafineria",
+    ref_ice:"Lodowa rafineria", ref_hell:"Piekielna rafineria", ref_mega_q:"Mega kwantowa rafineria",
+    ref_mega_e:"Mega energetyczna rafineria", ref_lava:"Lawowa rafineria", ref_crystal:"Kryształowa rafineria",
+    ref_diamond:"Diamentowa rafineria", ref_ruby:"Rubinowa rafineria",
+  },
+};
 
-function fmtPlain(n) {
-  if (!isFinite(n) || n === null) return '—';
-  if (n >= 1e12) return (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
-  if (n >= 1e9)  return (n / 1e9).toFixed(2).replace(/\.?0+$/, '')  + 'B';
-  if (n >= 1e6)  return (n / 1e6).toFixed(2).replace(/\.?0+$/, '')  + 'M';
-  if (n >= 1e3)  return (n / 1e3).toFixed(2).replace(/\.?0+$/, '')  + 'K';
-  return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
-}
-
-function parseLarge(str) {
-  if (!str && str !== 0) return 0;
-  if (typeof str === 'number') return str;
-  str = String(str).trim().replace(/,/g, '');
-  const m = str.match(/^([\d.]+)\s*([KMBT]?)$/i);
-  if (!m) return parseFloat(str) || 0;
-  const v = parseFloat(m[1]);
-  const s = { k: 1e3, m: 1e6, b: 1e9, t: 1e12 }[m[2].toLowerCase()] || 1;
-  return v * s;
-}
-
-function formatDuration(hours) {
-  if (!isFinite(hours) || hours <= 0) return '—';
-  const totalSec = Math.round(hours * 3600);
-  const d = Math.floor(totalSec / 86400);
-  const h = Math.floor((totalSec % 86400) / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  const parts = [];
-  if (d) parts.push(d + 'd');
-  if (h) parts.push(h + 'h');
-  if (m) parts.push(m + 'm');
-  if (s || !parts.length) parts.push(s + 's');
-  return parts.join(' ');
-}
-
-function setText(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = val;
-}
-
-function setSliderBg(el) {
-  const pct = ((el.value - el.min) / (el.max - el.min) * 100).toFixed(1) + '%';
-  el.style.setProperty('--pct', pct);
-}
-
-function calcProduction(ratePerSec, cashPerUnit, boostPct) {
-  const petrolPerHr = ratePerSec * 3600;
-  const boostMult   = boostPct / 100;
-  const cashPerHr   = petrolPerHr * cashPerUnit * boostMult;
-  return { petrolPerHr, cashPerHr };
-}
-
-function calcGoalTime(ratePerSec, currentCash, goalAmount, cashPerUnit, boostPct) {
-  if (ratePerSec <= 0 || goalAmount <= 0) return '—';
-  const { cashPerHr } = calcProduction(ratePerSec, cashPerUnit, boostPct);
-  if (cashPerHr <= 0) return '—';
-  const remaining = goalAmount - currentCash;
-  if (remaining <= 0) return 'Complete!';
-  return formatDuration(remaining / cashPerHr);
-}
-
-function calcDrillAfford(ratePerSec, currentCash, cashPerUnit, boostPct, selections) {
-  let totalCost = 0;
-  selections.forEach(sel => {
-    const drill = DRILLS.find(d => d.name === sel.name);
-    if (drill && sel.count > 0) totalCost += drill.price * sel.count;
-  });
-  if (ratePerSec <= 0) return { totalCost, timeLeft: '—' };
-  const { cashPerHr } = calcProduction(ratePerSec, cashPerUnit, boostPct);
-  if (totalCost <= 0 || cashPerHr <= 0) return { totalCost, timeLeft: '—' };
-  const remaining = totalCost - currentCash;
-  if (remaining <= 0) return { totalCost, timeLeft: 'Complete!' };
-  return { totalCost, timeLeft: formatDuration(remaining / cashPerHr) };
-}
-
-function calcGasProfit(gasAmountStr, cashPerUnit, boostPct) {
-  const gasAmount = parseLarge(gasAmountStr);
-  const boostMult = boostPct / 100;
-  return gasAmount * cashPerUnit * boostMult;
-}
-
-const KEY = 'oilcalc_v3';
-let cfg = { pps: 0, cash: 0, cpu: 15, boost: 285 };
+const KEY = 'oilcalc_v4';
+let cfg = { pps:0, cash:0, cpu:15, boost:285, lang:'en', accent:null };
+let currentLang = 'en';
 
 function loadCfg() {
   try {
@@ -763,264 +936,327 @@ function loadCfg() {
     if (s.cash  !== undefined) cfg.cash  = s.cash;
     if (s.cpu   !== undefined) cfg.cpu   = Math.min(15, Math.max(1, s.cpu));
     if (s.boost !== undefined) cfg.boost = Math.min(285, Math.max(100, s.boost));
+    if (s.lang)   cfg.lang   = s.lang;
+    if (s.accent) cfg.accent = s.accent;
     if (s.drillCounts)    Object.assign(drillCounts, s.drillCounts);
     if (s.refineryCounts) Object.assign(refineryCounts, s.refineryCounts);
   } catch(_) {}
 }
 
 function saveCfg() {
-  try { localStorage.setItem(KEY, JSON.stringify({ ...cfg, drillCounts, refineryCounts })); } catch(_) {}
+  try { localStorage.setItem(KEY, JSON.stringify({...cfg, drillCounts, refineryCounts})); } catch(_) {}
 }
 
-function psRecalc() {
-  const { petrolPerHr, cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
-  setText('ps-petrolHr',   cfg.pps > 0 ? fmtPlain(petrolPerHr) : '—');
-  setText('ps-cashHr',     cfg.pps > 0 ? fmtNum(cashPerHr) : '—');
-  setText('ps-cpuLabel',   '$' + cfg.cpu);
-  setText('ps-cpuVal',     '$' + cfg.cpu);
-  setText('ps-boostLabel', cfg.boost + '%');
-  setText('ps-boostVal',   cfg.boost + '%');
-  setSliderBg(document.getElementById('ps-cpuSlider'));
-  setSliderBg(document.getElementById('ps-boostSlider'));
+function t(key) { return (LANGS[currentLang] && LANGS[currentLang][key]) || LANGS.en[key] || key; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key);
+  });
+  document.getElementById('ps-pps').placeholder   = t('pps_ph');
+  document.getElementById('ps-cash').placeholder  = t('cash_ph');
+  document.getElementById('calc-gas').placeholder = t('gas_ph');
+  document.getElementById('g-goalAmt').placeholder = t('goal_ph');
+  const gasDesc = document.getElementById('gasDesc');
+  if (gasDesc) gasDesc.innerHTML = t('gas_desc');
+  rebuildGoalLists();
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+}
+
+function applyAccent(color, hi) {
+  const root = document.documentElement;
+  root.style.setProperty('--blue', color);
+  root.style.setProperty('--blue-hi', hi);
+  const r = parseInt(color.slice(1,3),16), g = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
+  root.style.setProperty('--blue-lo', `rgba(${r},${g},${b},0.15)`);
+}
+
+function fmtNum(n) {
+  if (!isFinite(n)||n===null) return '—';
+  if (n>=1e12) return '$'+(n/1e12).toFixed(2).replace(/\.?0+$/,'')+'T';
+  if (n>=1e9)  return '$'+(n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';
+  if (n>=1e6)  return '$'+(n/1e6).toFixed(2).replace(/\.?0+$/,'')+'M';
+  if (n>=1e3)  return '$'+(n/1e3).toFixed(2).replace(/\.?0+$/,'')+'K';
+  return '$'+n.toLocaleString('en-US',{maximumFractionDigits:2});
+}
+
+function fmtPlain(n) {
+  if (!isFinite(n)||n===null) return '—';
+  if (n>=1e12) return (n/1e12).toFixed(2).replace(/\.?0+$/,'')+'T';
+  if (n>=1e9)  return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';
+  if (n>=1e6)  return (n/1e6).toFixed(2).replace(/\.?0+$/,'')+'M';
+  if (n>=1e3)  return (n/1e3).toFixed(2).replace(/\.?0+$/,'')+'K';
+  return n.toLocaleString('en-US',{maximumFractionDigits:2});
+}
+
+function parseLarge(str) {
+  if (!str && str!==0) return 0;
+  if (typeof str==='number') return str;
+  str = String(str).trim().replace(/,/g,'');
+  const m = str.match(/^([\d.]+)\s*([KMBT]?)$/i);
+  if (!m) return parseFloat(str)||0;
+  const v = parseFloat(m[1]);
+  const s = {k:1e3,m:1e6,b:1e9,t:1e12}[m[2].toLowerCase()]||1;
+  return v*s;
+}
+
+function formatDuration(hours) {
+  if (!isFinite(hours)||hours<=0) return '—';
+  const totalSec = Math.round(hours*3600);
+  const d = Math.floor(totalSec/86400), h = Math.floor((totalSec%86400)/3600);
+  const m = Math.floor((totalSec%3600)/60), s = totalSec%60;
+  const parts = [];
+  if (d) parts.push(d+'d'); if (h) parts.push(h+'h');
+  if (m) parts.push(m+'m'); if (s||!parts.length) parts.push(s+'s');
+  return parts.join(' ');
+}
+
+function setText(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+
+function setSliderBg(el) {
+  el.style.setProperty('--pct', ((el.value-el.min)/(el.max-el.min)*100).toFixed(1)+'%');
 }
 
 function showHint(hintId, raw, parsed) {
   const el = document.getElementById(hintId);
   if (!el) return;
-  if (!raw || raw.trim() === '') { el.textContent = ''; el.className = 'field-hint'; return; }
-  if (parsed > 0) {
-    el.textContent = '→ ' + parsed.toLocaleString('en-US');
-    el.className = 'field-hint ok';
-  } else {
-    el.textContent = 'Could not parse value';
-    el.className = 'field-hint err';
-  }
+  if (!raw||raw.trim()==='') { el.textContent=''; el.className='field-hint'; return; }
+  if (parsed>0) { el.textContent='→ '+parsed.toLocaleString('en-US'); el.className='field-hint ok'; }
+  else { el.textContent='Could not parse value'; el.className='field-hint err'; }
 }
 
-function psInit() {
-  const ppsEl   = document.getElementById('ps-pps');
-  const cashEl  = document.getElementById('ps-cash');
-  const cpuEl   = document.getElementById('ps-cpuSlider');
-  const boostEl = document.getElementById('ps-boostSlider');
-
-  if (cfg.pps  > 0) { ppsEl.value  = cfg.pps.toLocaleString('en-US'); showHint('ps-pps-hint', ppsEl.value, cfg.pps); }
-  if (cfg.cash > 0) { cashEl.value = fmtNum(cfg.cash).replace('$', ''); showHint('ps-cash-hint', cashEl.value, cfg.cash); }
-  cpuEl.value   = cfg.cpu;
-  boostEl.value = cfg.boost;
-
-  ppsEl.addEventListener('input', e => {
-    const v = parseLarge(e.target.value);
-    cfg.pps = v;
-    showHint('ps-pps-hint', e.target.value, v);
-    psRecalc(); goalsRecalc(); calcRecalc();
-  });
-
-  cashEl.addEventListener('input', e => {
-    const v = parseLarge(e.target.value);
-    cfg.cash = v;
-    showHint('ps-cash-hint', e.target.value, v);
-    goalsRecalc();
-  });
-
-  cpuEl.addEventListener('input', e => {
-    cfg.cpu = parseInt(e.target.value);
-    psRecalc(); goalsRecalc(); calcRecalc();
-  });
-
-  boostEl.addEventListener('input', e => {
-    cfg.boost = parseInt(e.target.value);
-    psRecalc(); goalsRecalc(); calcRecalc();
-  });
-
-  document.getElementById('ps-save').addEventListener('click', () => {
-    saveCfg();
-    const btn = document.getElementById('ps-save');
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
-    btn.style.background = '#15803d';
-    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1800);
-  });
-
-  psRecalc();
+function calcProduction(rps, cpu, boost) {
+  const petrolPerHr = rps*3600, boostMult = boost/100;
+  return { petrolPerHr, cashPerHr: petrolPerHr*cpu*boostMult };
 }
 
-function buildDrillSelector() {
-  const container = document.getElementById('drillSelector');
-  container.innerHTML = '';
+function calcGoalTime(rps, cash, goal, cpu, boost) {
+  if (rps<=0||goal<=0) return '—';
+  const { cashPerHr } = calcProduction(rps, cpu, boost);
+  if (cashPerHr<=0) return '—';
+  const rem = goal-cash;
+  if (rem<=0) return t('complete');
+  return formatDuration(rem/cashPerHr);
+}
+
+function calcDrillAfford(rps, cash, cpu, boost, selections) {
+  let total = 0;
+  selections.forEach(s => { if (s.count>0) total += s.price*s.count; });
+  if (rps<=0) return { total, timeLeft:'—' };
+  const { cashPerHr } = calcProduction(rps, cpu, boost);
+  if (total<=0||cashPerHr<=0) return { total, timeLeft:'—' };
+  const rem = total-cash;
+  if (rem<=0) return { total, timeLeft: t('complete') };
+  return { total, timeLeft: formatDuration(rem/cashPerHr) };
+}
+
+function calcGasProfit(str, cpu, boost) {
+  return parseLarge(str)*cpu*(boost/100);
+}
+
+function rebuildGoalLists() {
+  const ds = document.getElementById('drillSelector');
+  const rs = document.getElementById('refinerySelector');
+  if (!ds||!rs) return;
+  ds.innerHTML=''; rs.innerHTML='';
+
   DRILLS.forEach(drill => {
+    const name = t(drill.name_key);
     const row = document.createElement('div');
     row.className = 'drill-row';
     row.innerHTML = `
       <div class="drill-info">
-        <div class="drill-name">${drill.name}</div>
-        <div class="drill-price">${fmtNum(drill.price)} &nbsp;·&nbsp; ${drill.rate}/s</div>
+        <div class="drill-name">${name}</div>
+        <div class="drill-price">${fmtNum(drill.price)} · ${drill.rate}${t('rate_unit')}</div>
       </div>
       <div class="drill-counter">
-        <button class="cnt-btn" data-drill="${drill.name}" data-dir="-1">−</button>
-        <span class="cnt-val" id="cnt-${drill.name.replace(/\s/g, '_')}">${drillCounts[drill.name]}</span>
-        <button class="cnt-btn" data-drill="${drill.name}" data-dir="1">+</button>
-      </div>
-    `;
-    container.appendChild(row);
+        <button class="cnt-btn" data-id="${drill.name}" data-type="drill" data-dir="-1">−</button>
+        <span class="cnt-val" id="cnt-d-${drill.name.replace(/\s/g,'_')}">${drillCounts[drill.name]}</span>
+        <button class="cnt-btn" data-id="${drill.name}" data-type="drill" data-dir="1">+</button>
+      </div>`;
+    ds.appendChild(row);
   });
 
-  container.addEventListener('click', e => {
-    const btn = e.target.closest('.cnt-btn');
-    if (!btn) return;
-    const name = btn.dataset.drill;
-    const dir  = parseInt(btn.dataset.dir);
-    drillCounts[name] = Math.max(0, (drillCounts[name] || 0) + dir);
-    const valEl = document.getElementById('cnt-' + name.replace(/\s/g, '_'));
-    if (valEl) valEl.textContent = drillCounts[name];
-    saveCfg();
-    goalsRecalc();
-  });
-}
-
-function buildRefinerySelector() {
-  const container = document.getElementById('refinerySelector');
-  container.innerHTML = '';
   REFINERIES.forEach(ref => {
+    const name = t(ref.name_key);
     const row = document.createElement('div');
     row.className = 'drill-row';
     row.innerHTML = `
       <div class="drill-info">
-        <div class="drill-name">${ref.name}</div>
-        <div class="drill-price">${fmtNum(ref.price)} &nbsp;·&nbsp; ${ref.storage.toLocaleString()} storage</div>
+        <div class="drill-name">${name}</div>
+        <div class="drill-price">${fmtNum(ref.price)} · ${ref.storage.toLocaleString()} ${t('storage')}</div>
       </div>
       <div class="drill-counter">
-        <button class="cnt-btn" data-ref="${ref.name}" data-dir="-1">−</button>
-        <span class="cnt-val" id="rcnt-${ref.name.replace(/\s/g, '_')}">${refineryCounts[ref.name]}</span>
-        <button class="cnt-btn" data-ref="${ref.name}" data-dir="1">+</button>
-      </div>
-    `;
-    container.appendChild(row);
+        <button class="cnt-btn" data-id="${ref.name}" data-type="ref" data-dir="-1">−</button>
+        <span class="cnt-val" id="cnt-r-${ref.name.replace(/\s/g,'_')}">${refineryCounts[ref.name]}</span>
+        <button class="cnt-btn" data-id="${ref.name}" data-type="ref" data-dir="1">+</button>
+      </div>`;
+    rs.appendChild(row);
   });
 
-  container.addEventListener('click', e => {
-    const btn = e.target.closest('.cnt-btn');
-    if (!btn || !btn.dataset.ref) return;
-    const name = btn.dataset.ref;
-    const dir  = parseInt(btn.dataset.dir);
-    refineryCounts[name] = Math.max(0, (refineryCounts[name] || 0) + dir);
-    const valEl = document.getElementById('rcnt-' + name.replace(/\s/g, '_'));
-    if (valEl) valEl.textContent = refineryCounts[name];
-    saveCfg();
-    goalsRecalc();
-  });
+  goalsRecalc();
 }
 
+function goalsRecalc() {
+  const drillSel = DRILLS.map(d => ({ price:d.price, count:drillCounts[d.name]||0 }));
+  const { total:drillTotal, timeLeft:drillTime } = calcDrillAfford(cfg.pps, cfg.cash, cfg.cpu, cfg.boost, drillSel);
+  const anyDrills = drillSel.some(s=>s.count>0);
+  setText('g-totalCost', anyDrills ? fmtNum(drillTotal) : '—');
+  const dtEl = document.getElementById('g-drillTime');
+  if (dtEl) { dtEl.textContent = anyDrills ? drillTime : '—'; dtEl.className='iv'+(drillTime===t('complete')?' affordable':''); }
+  const drillCount = drillSel.reduce((a,s)=>a+s.count,0);
+  setText('ga-drills-summary', drillCount>0 ? drillCount+' '+t('selected') : '');
+
+  const refSel = REFINERIES.map(r => ({ price:r.price, count:refineryCounts[r.name]||0 }));
+  const anyRefs = refSel.some(s=>s.count>0);
+  let refTotal = 0; refSel.forEach(s => { refTotal+=s.price*s.count; });
+  setText('g-refTotalCost', anyRefs ? fmtNum(refTotal) : '—');
+  const rtEl = document.getElementById('g-refTime');
+  if (rtEl) {
+    if (!anyRefs) { rtEl.textContent='—'; rtEl.className='iv'; }
+    else {
+      const { cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
+      if (cashPerHr<=0) { rtEl.textContent='—'; rtEl.className='iv'; }
+      else {
+        const rem = refTotal-cfg.cash;
+        if (rem<=0) { rtEl.textContent=t('complete'); rtEl.className='iv affordable'; }
+        else { rtEl.textContent=formatDuration(rem/cashPerHr); rtEl.className='iv'; }
+      }
+    }
+  }
+  const refCount = refSel.reduce((a,s)=>a+s.count,0);
+  setText('ga-ref-summary', refCount>0 ? refCount+' '+t('selected') : '');
+
+  const goalAmt = parseLarge(document.getElementById('g-goalAmt')?.value);
+  const goalTime = calcGoalTime(cfg.pps, cfg.cash, goalAmt, cfg.cpu, cfg.boost);
+  const gtEl = document.getElementById('g-goalTime');
+  if (gtEl) { gtEl.textContent=goalTime; gtEl.className='iv'+(goalTime===t('complete')?' affordable':''); }
+}
+
+function psRecalc() {
+  const { petrolPerHr, cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
+  setText('ps-petrolHr', cfg.pps>0 ? fmtPlain(petrolPerHr) : '—');
+  setText('ps-cashHr',   cfg.pps>0 ? fmtNum(cashPerHr) : '—');
+  setText('ps-cpuLabel', '$'+cfg.cpu);
+  setText('ps-cpuVal',   '$'+cfg.cpu);
+  setText('ps-boostLabel', cfg.boost+'%');
+  setText('ps-boostVal',   cfg.boost+'%');
+  setSliderBg(document.getElementById('ps-cpuSlider'));
+  setSliderBg(document.getElementById('ps-boostSlider'));
+}
+
+function calcRecalc() {
+  const s = document.getElementById('calc-gas')?.value||'';
+  setText('calc-profit', s ? fmtNum(calcGasProfit(s, cfg.cpu, cfg.boost)) : '$0.00');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector('[data-tab="'+name+'"]').classList.add('active');
+}
 
 function initGoalAccordion(id) {
-  const el      = document.getElementById(id);
+  const el = document.getElementById(id);
   const trigger = el.querySelector('.goal-acc-trigger');
   const body    = el.querySelector('.goal-acc-body');
   trigger.addEventListener('click', () => {
     const open = body.classList.toggle('open');
-    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    trigger.setAttribute('aria-expanded', open?'true':'false');
   });
 }
-
-function goalsRecalc() {
-  const drillSelections = DRILLS.map(d => ({ name: d.name, count: drillCounts[d.name] || 0 }));
-  const { totalCost: drillCost, timeLeft: drillTime } = calcDrillAfford(cfg.pps, cfg.cash, cfg.cpu, cfg.boost, drillSelections);
-  const anyDrills = drillSelections.some(s => s.count > 0);
-  setText('g-totalCost', anyDrills ? fmtNum(drillCost) : '—');
-
-  const drillTimeEl = document.getElementById('g-drillTime');
-  if (drillTimeEl) {
-    drillTimeEl.textContent = anyDrills ? drillTime : '—';
-    drillTimeEl.className   = 'iv' + (drillTime === 'Complete!' ? ' affordable' : '');
-  }
-
-  const drillTotal = drillSelections.reduce((sum, s) => sum + s.count, 0);
-  const drillSummaryEl = document.getElementById('ga-drills-summary');
-  if (drillSummaryEl) drillSummaryEl.textContent = drillTotal > 0 ? drillTotal + ' selected' : '';
-
-  const refSelections = REFINERIES.map(r => ({ name: r.name, count: refineryCounts[r.name] || 0, price: r.price }));
-  const anyRefineries = refSelections.some(s => s.count > 0);
-  let refTotal = 0;
-  refSelections.forEach(s => { refTotal += s.price * s.count; });
-
-  const refTimeEl = document.getElementById('g-refTime');
-  if (anyRefineries) {
-    setText('g-refTotalCost', fmtNum(refTotal));
-    const { cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
-    if (refTimeEl) {
-      if (cashPerHr <= 0) {
-        refTimeEl.textContent = '—'; refTimeEl.className = 'iv';
-      } else {
-        const remaining = refTotal - cfg.cash;
-        if (remaining <= 0) {
-          refTimeEl.textContent = 'Complete!'; refTimeEl.className = 'iv affordable';
-        } else {
-          refTimeEl.textContent = formatDuration(remaining / cashPerHr); refTimeEl.className = 'iv';
-        }
-      }
-    }
-  } else {
-    setText('g-refTotalCost', '—');
-    if (refTimeEl) { refTimeEl.textContent = '—'; refTimeEl.className = 'iv'; }
-  }
-
-  const refCount = refSelections.reduce((sum, s) => sum + s.count, 0);
-  const refSummaryEl = document.getElementById('ga-ref-summary');
-  if (refSummaryEl) refSummaryEl.textContent = refCount > 0 ? refCount + ' selected' : '';
-
-  const goalAmt  = parseLarge(document.getElementById('g-goalAmt')?.value);
-  const goalTime = calcGoalTime(cfg.pps, cfg.cash, goalAmt, cfg.cpu, cfg.boost);
-  const gtEl = document.getElementById('g-goalTime');
-  if (gtEl) {
-    gtEl.textContent = goalTime;
-    gtEl.className   = 'iv' + (goalTime === 'Complete!' ? ' affordable' : '');
-  }
-}
-
-function goalsInit() {
-  buildDrillSelector();
-  buildRefinerySelector();
-  initGoalAccordion('ga-drills');
-  initGoalAccordion('ga-refineries');
-  document.getElementById('g-goalAmt').addEventListener('input', goalsRecalc);
-  goalsRecalc();
-}
-
-function calcRecalc() {
-  const gasStr = document.getElementById('calc-gas')?.value || '';
-  const profit = calcGasProfit(gasStr, cfg.cpu, cfg.boost);
-  setText('calc-profit', gasStr ? fmtNum(profit) : '$0.00');
-}
-
-function calcInit() {
-  document.getElementById('calc-gas').addEventListener('input', calcRecalc);
-  calcRecalc();
-}
-
-function switchTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  document.querySelector('[data-tab="' + name + '"]').classList.add('active');
-}
-
-document.querySelectorAll('.nav-item').forEach(n => {
-  n.addEventListener('click', () => switchTab(n.dataset.tab));
-});
-
-(function() {
-  const trigger = document.getElementById('gasToggle');
-  const body    = document.getElementById('gasBody');
-  if (!trigger || !body) return;
-  trigger.addEventListener('click', () => {
-    const open = body.classList.toggle('open');
-    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-})();
 
 loadCfg();
-psInit();
-goalsInit();
-calcInit();
+currentLang = cfg.lang || 'en';
+
+const ppsEl = document.getElementById('ps-pps');
+const cashEl = document.getElementById('ps-cash');
+const cpuEl  = document.getElementById('ps-cpuSlider');
+const boostEl= document.getElementById('ps-boostSlider');
+
+if (cfg.pps>0)  { ppsEl.value  = cfg.pps.toLocaleString('en-US'); showHint('ps-pps-hint', ppsEl.value, cfg.pps); }
+if (cfg.cash>0) { cashEl.value = fmtNum(cfg.cash).replace('$',''); showHint('ps-cash-hint', cashEl.value, cfg.cash); }
+cpuEl.value = cfg.cpu; boostEl.value = cfg.boost;
+
+if (cfg.accent) applyAccent(cfg.accent.color, cfg.accent.hi);
+
+document.querySelectorAll('.swatch').forEach(sw => {
+  sw.classList.toggle('active', cfg.accent && cfg.accent.color===sw.dataset.color);
+  sw.addEventListener('click', () => {
+    applyAccent(sw.dataset.color, sw.dataset.hi);
+    cfg.accent = { color:sw.dataset.color, hi:sw.dataset.hi };
+    saveCfg();
+    document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('active', s===sw));
+  });
+});
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentLang = btn.dataset.lang;
+    cfg.lang = currentLang;
+    saveCfg();
+    applyLang();
+  });
+});
+
+ppsEl.addEventListener('input', e => {
+  const v=parseLarge(e.target.value); cfg.pps=v;
+  showHint('ps-pps-hint', e.target.value, v);
+  psRecalc(); goalsRecalc(); calcRecalc();
+});
+cashEl.addEventListener('input', e => {
+  const v=parseLarge(e.target.value); cfg.cash=v;
+  showHint('ps-cash-hint', e.target.value, v);
+  goalsRecalc();
+});
+cpuEl.addEventListener('input', e => { cfg.cpu=parseInt(e.target.value); psRecalc(); goalsRecalc(); calcRecalc(); });
+boostEl.addEventListener('input', e => { cfg.boost=parseInt(e.target.value); psRecalc(); goalsRecalc(); calcRecalc(); });
+
+document.getElementById('ps-save').addEventListener('click', () => {
+  saveCfg();
+  const btn = document.getElementById('ps-save');
+  const span = btn.querySelector('[data-i18n]');
+  if (span) { const orig=span.textContent; span.textContent=t('saved'); btn.style.background='#15803d'; setTimeout(()=>{ span.textContent=t('save_config'); btn.style.background=''; },1800); }
+});
+
+document.getElementById('g-goalAmt').addEventListener('input', goalsRecalc);
+document.getElementById('calc-gas').addEventListener('input', calcRecalc);
+
+document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', ()=>switchTab(n.dataset.tab)));
+
+document.querySelectorAll('.drill-selector').forEach(sel => {
+  sel.addEventListener('click', e => {
+    const btn = e.target.closest('.cnt-btn');
+    if (!btn) return;
+    const id   = btn.dataset.id;
+    const type = btn.dataset.type;
+    const dir  = parseInt(btn.dataset.dir);
+    if (type==='drill') {
+      drillCounts[id] = Math.max(0,(drillCounts[id]||0)+dir);
+      setText('cnt-d-'+id.replace(/\s/g,'_'), drillCounts[id]);
+    } else {
+      refineryCounts[id] = Math.max(0,(refineryCounts[id]||0)+dir);
+      setText('cnt-r-'+id.replace(/\s/g,'_'), refineryCounts[id]);
+    }
+    saveCfg(); goalsRecalc();
+  });
+});
+
+const gasToggle = document.getElementById('gasToggle');
+const gasBody   = document.getElementById('gasBody');
+gasToggle.addEventListener('click', () => {
+  const open = gasBody.classList.toggle('open');
+  gasToggle.setAttribute('aria-expanded', open?'true':'false');
+});
+
+initGoalAccordion('ga-drills');
+initGoalAccordion('ga-refineries');
+
+applyLang();
+psRecalc();
+calcRecalc();
 </script>
 </body>
 </html>
