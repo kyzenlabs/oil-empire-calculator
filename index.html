@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>oil-empire-calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:        #0f1923;
+  --sidebar:   #111d2b;
+  --card:      #1a2535;
+  --card2:     #1f2d3f;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.13);
+  --text:      #cdd8e3;
+  --text2:     #e8f0f7;
+  --muted:     #5f7a92;
+  --dim:       #2e4054;
+  --blue:      #2563eb;
+  --blue-hi:   #3b82f6;
+  --blue-lo:   rgba(59,130,246,0.15);
+  --green:     #22c55e;
+  --green-bg:  #15803d;
+  --red:       #ef4444;
+  --cyan:      #22d3ee;
+  --font:      'Inter', system-ui, sans-serif;
+  --sidebar-w: 192px;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.titlebar {
+  height: 30px;
+  background: #0b1520;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+.titlebar-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--dim); }
+.titlebar-name { font-size: 12px; color: var(--muted); margin-left: 6px; }
+
+.app { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.sidebar-title { font-size: 15px; font-weight: 600; color: var(--text2); }
+.hamburger { display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 18px; height: 2px; background: var(--muted); border-radius: 2px; }
+
+.nav-list { padding: 8px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: all 0.14s;
+  border: 1px solid transparent;
+}
+.nav-item svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.55; transition: opacity 0.14s; }
+.nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.nav-item:hover svg { opacity: 0.8; }
+.nav-item.active { background: var(--blue); color: #fff; border-color: rgba(255,255,255,0.1); }
+.nav-item.active svg { opacity: 1; }
+.sidebar-bottom { padding: 8px; border-top: 1px solid var(--border); }
+
+.main { flex: 1; overflow-y: auto; padding: 26px 30px 40px; }
+.main::-webkit-scrollbar { width: 5px; }
+.main::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 4px; }
+
+.page-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.page-hdr svg { width: 26px; height: 26px; flex-shrink: 0; }
+.page-hdr h1 { font-size: 22px; font-weight: 700; color: var(--text2); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 18px;
+}
+.card-title svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.field-lbl { font-size: 12px; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.2px; }
+.field-inp {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text2);
+  font-family: var(--font);
+  font-size: 14px;
+  padding: 9px 13px;
+  outline: none;
+}
+.field-inp:focus { border-color: var(--blue-hi); box-shadow: 0 0 0 2px var(--blue-lo); }
+.field-mb { margin-bottom: 13px; }
+.field-hint { font-size: 11px; color: var(--muted); min-height: 16px; margin-top: 4px; margin-bottom: 10px; transition: color 0.15s; }
+.field-hint.ok { color: var(--cyan); }
+.field-hint.err { color: #f87171; }
+
+.slider-row { margin-bottom: 16px; }
+.slider-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.slider-row-top .field-lbl { margin-bottom: 0; }
+.slider-val { font-size: 13px; font-weight: 600; color: var(--text2); }
+input[type=range] {
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(to right, var(--blue-hi) var(--pct, 50%), var(--dim) var(--pct, 50%));
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--blue-hi);
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+
+.stat-line { font-size: 13px; color: var(--muted); margin-bottom: 9px; line-height: 1.5; }
+.stat-line b { color: var(--text2); font-weight: 600; }
+.stat-green { color: var(--green); font-weight: 600; }
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn:hover { opacity: 0.87; }
+.btn:active { transform: scale(0.97); }
+.btn-blue { background: var(--blue); color: #fff; }
+
+.info-box {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  padding: 11px 15px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.info-box .iv { color: var(--cyan); font-weight: 600; }
+.info-box .iv.affordable { color: var(--green); }
+
+.drill-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.drill-selector::-webkit-scrollbar { width: 4px; }
+.drill-selector::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 4px; }
+
+.drill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 14px;
+  gap: 12px;
+  transition: border-color 0.13s;
+}
+.drill-row:hover { border-color: var(--border2); }
+.drill-info { flex: 1; min-width: 0; }
+.drill-name { font-size: 13px; font-weight: 500; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.drill-price { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.drill-counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.cnt-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  background: var(--dim);
+  color: var(--text2);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.13s;
+  line-height: 1;
+}
+.cnt-btn:hover { background: var(--blue); }
+.cnt-val {
+  min-width: 28px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  font-family: var(--font);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.calc-result {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  padding: 11px 15px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+.calc-result .cv { color: var(--green); font-weight: 600; }
+
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px;
+  text-align: center;
+}
+.coming-soon svg { width: 56px; height: 56px; color: var(--dim); }
+.coming-soon h2 { font-size: 18px; font-weight: 600; color: var(--text2); }
+.coming-soon p { font-size: 13px; color: var(--muted); max-width: 300px; line-height: 1.6; }
+
+.about-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; margin-bottom: 12px; }
+.about-card h2 { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 9px; }
+.about-card p, .about-card li { font-size: 13px; color: var(--muted); line-height: 1.75; }
+.about-card ul { padding-left: 0; list-style: none; }
+.about-card li::before { content: "• "; color: var(--blue-hi); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.accordion {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.accordion-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+  transition: background 0.15s;
+}
+.accordion-trigger:hover { background: rgba(255,255,255,0.03); }
+.accordion-chevron { transition: transform 0.25s ease; flex-shrink: 0; color: var(--muted); }
+.accordion-trigger[aria-expanded="true"] .accordion-chevron { transform: rotate(180deg); }
+.accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.25s ease; opacity: 0; }
+.accordion-body.open { max-height: 600px; opacity: 1; }
+.accordion-inner { padding: 0 18px 18px; border-top: 1px solid var(--border); }
+.gas-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.75;
+  padding: 10px 12px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-top: 14px;
+}
+.gas-desc b { color: var(--text); }
+.gas-desc code { color: var(--cyan); font-family: monospace; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="titlebar-dot"></div>
+  <div class="titlebar-dot"></div>
+  <div class="titlebar-dot"></div>
+  <span class="titlebar-name">oil-empire-calculator</span>
+</div>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Menu</span>
+      <div class="hamburger"><span></span><span></span><span></span></div>
+    </div>
+    <nav class="nav-list">
+      <div class="nav-item active" data-tab="production">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/>
+        </svg>
+        Production Stats
+      </div>
+      <div class="nav-item" data-tab="goals">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/>
+          <path d="M12 17v4"/><path d="M8 21h8"/>
+          <path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/>
+        </svg>
+        Goals
+      </div>
+      <div class="nav-item" data-tab="layout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Layout Designer
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="nav-item" data-tab="about">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        About
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div id="tab-production" class="tab-panel active">
+      <div class="page-hdr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+          <rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/>
+        </svg>
+        <h1>Production Stats</h1>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+          Rate
+        </div>
+        <div class="field-lbl">Petrol per second:</div>
+        <input class="field-inp" type="text" id="ps-pps" placeholder="e.g. 277,005 or 277005" autocomplete="off"/>
+        <div class="field-hint" id="ps-pps-hint"></div>
+        <div class="field-lbl" style="margin-top:12px;">Current Cash (optional):</div>
+        <input class="field-inp" type="text" id="ps-cash" placeholder="e.g. 16.9B or 16,900,000,000" autocomplete="off"/>
+        <div class="field-hint" id="ps-cash-hint" style="margin-bottom:14px;"></div>
+        <button class="btn btn-blue" id="ps-save">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Save Config
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Stats
+        </div>
+        <div class="stat-line">Petrol/hr: <b id="ps-petrolHr">—</b></div>
+        <div class="stat-line">Cash/hr: <span class="stat-green" id="ps-cashHr">—</span></div>
+        <div class="stat-line">Cash per Unit: <b id="ps-cpuLabel">$15</b></div>
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span class="field-lbl">Cash per Unit ($1 – $15)</span>
+            <span class="slider-val" id="ps-cpuVal">$15</span>
+          </div>
+          <input type="range" id="ps-cpuSlider" min="1" max="15" value="15"/>
+        </div>
+        <div class="stat-line">Boost: <b id="ps-boostLabel">285%</b></div>
+        <div class="slider-row">
+          <div class="slider-row-top">
+            <span class="field-lbl">Boost multiplier (100% – 285%)</span>
+            <span class="slider-val" id="ps-boostVal">285%</span>
+          </div>
+          <input type="range" id="ps-boostSlider" min="100" max="285" value="285"/>
+        </div>
+      </div>
+
+      <div class="accordion" id="gasAccordion">
+        <button class="accordion-trigger" id="gasToggle" aria-expanded="false">
+          <div style="display:flex;align-items:center;gap:9px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3h7v9H3z"/><path d="M14 3h7v5h-7z"/><path d="M14 12h7v9h-7z"/><path d="M3 16h7v5H3z"/>
+            </svg>
+            Gas Profit Calculator
+          </div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="accordion-body" id="gasBody">
+          <div class="accordion-inner">
+            <p class="gas-desc">Enter the amount of gas (petrol units) you have collected or plan to sell. This multiplies that quantity by your configured <b>Cash per Unit</b> and <b>Boost multiplier</b> to show the total cash you'll receive. Supports shorthand like <code>100k</code>, <code>2.5M</code>, or comma-separated numbers.</p>
+            <div class="field-lbl" style="margin-top:12px;">Gas Amount:</div>
+            <input class="field-inp field-mb" type="text" id="calc-gas" placeholder="e.g. 100k or 2,500,000" autocomplete="off"/>
+            <div class="calc-result">Total Profit: <span class="cv" id="calc-profit">$0.00</span></div>
+            <div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:10px;">More calculations coming soon…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-goals" class="tab-panel">
+      <div class="page-hdr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+          <path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/>
+          <path d="M12 17v4"/><path d="M8 21h8"/>
+          <path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/>
+        </svg>
+        <h1>Goals</h1>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+          Drills
+        </div>
+        <div class="drill-selector" id="drillSelector"></div>
+        <div class="info-box" style="margin-top:4px;">
+          Total cost: <span class="iv" id="g-totalCost">—</span> &nbsp;|&nbsp;
+          Time to afford: <span class="iv" id="g-drillTime">—</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+          </svg>
+          Cash Goal
+        </div>
+        <div class="field-lbl">Goal Amount:</div>
+        <input class="field-inp field-mb" type="text" id="g-goalAmt" placeholder="e.g. 1B"/>
+        <div class="info-box">
+          Time to goal: <span class="iv" id="g-goalTime">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-layout" class="tab-panel">
+      <div class="page-hdr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        <h1>Layout Designer</h1>
+      </div>
+      <div class="card coming-soon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          <line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2"/>
+          <line x1="12" y1="9" x2="12" y2="15" stroke-dasharray="2 2"/>
+        </svg>
+        <h2>Coming Soon</h2>
+        <p>The Layout Designer is currently in development. Place and arrange drills, refineries, and totems on your base grid to optimise production.</p>
+      </div>
+    </div>
+
+    <div id="tab-about" class="tab-panel">
+      <div class="page-hdr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <h1>About</h1>
+      </div>
+      <div class="about-card">
+        <h2>Oil Empire Calculator</h2>
+        <p>A powerful calculator tool for Oil Empire optimisation. Calculate production rates, drill affordability, and track your cash goals.</p>
+      </div>
+      <div class="about-card">
+        <h2>Features</h2>
+        <ul>
+          <li>Production statistics and rates</li>
+          <li>Drill affordability calculator</li>
+          <li>Cash goal tracker</li>
+          <li>Gas profit calculator</li>
+          <li>Configurable sale price and totem boost multiplier</li>
+          <li>Layout designer (coming soon)</li>
+        </ul>
+      </div>
+      <div class="about-card">
+        <h2>Version</h2>
+        <p>v1.0.0</p>
+      </div>
+      <div class="about-card">
+        <h2>Built With</h2>
+        <p>HTML · CSS · Vanilla JavaScript</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const DRILLS = [
+  { name: "Basic Drill",             price: 500,         rate: 1    },
+  { name: "Strong Drill",            price: 1800,        rate: 3    },
+  { name: "Enhanced Drill",          price: 3600,        rate: 4    },
+  { name: "Speed Drill",             price: 7200,        rate: 6    },
+  { name: "Reinforced Drill",        price: 12000,       rate: 8    },
+  { name: "Industrial Drill",        price: 20000,       rate: 10   },
+  { name: "Double Industrial Drill", price: 30000,       rate: 12   },
+  { name: "Turbo Drill",             price: 80000,       rate: 16   },
+  { name: "Mega Drill",              price: 140000,      rate: 20   },
+  { name: "Mega Emerald Drill",      price: 400000,      rate: 25   },
+  { name: "Hell Drill",              price: 1225000,     rate: 35   },
+  { name: "Plasma Drill",            price: 4500000,     rate: 50   },
+  { name: "Huge Long Drill",         price: 40000000,    rate: 220  },
+  { name: "Mega Plasma Drill",       price: 95000000,    rate: 275  },
+  { name: "Multi Drill",             price: 280000000,   rate: 350  },
+  { name: "Lava Drill",              price: 900000000,   rate: 600  },
+  { name: "Ice Plasma Drill",        price: 2400000000,  rate: 800  },
+  { name: "Crystal Drill",           price: 9000000000,  rate: 1500 },
+  { name: "Diamond Drill",           price: 27500000000, rate: 2750 },
+  { name: "Ruby Drill",              price: 85500000000, rate: 4500 },
+];
+
+const drillCounts = Object.fromEntries(DRILLS.map(d => [d.name, 0]));
+
+function fmtNum(n) {
+  if (!isFinite(n) || n === null) return '—';
+  if (n >= 1e12) return '$' + (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
+  if (n >= 1e9)  return '$' + (n / 1e9).toFixed(2).replace(/\.?0+$/, '')  + 'B';
+  if (n >= 1e6)  return '$' + (n / 1e6).toFixed(2).replace(/\.?0+$/, '')  + 'M';
+  if (n >= 1e3)  return '$' + (n / 1e3).toFixed(2).replace(/\.?0+$/, '')  + 'K';
+  return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+}
+
+function fmtPlain(n) {
+  if (!isFinite(n) || n === null) return '—';
+  if (n >= 1e12) return (n / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
+  if (n >= 1e9)  return (n / 1e9).toFixed(2).replace(/\.?0+$/, '')  + 'B';
+  if (n >= 1e6)  return (n / 1e6).toFixed(2).replace(/\.?0+$/, '')  + 'M';
+  if (n >= 1e3)  return (n / 1e3).toFixed(2).replace(/\.?0+$/, '')  + 'K';
+  return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+}
+
+function parseLarge(str) {
+  if (!str && str !== 0) return 0;
+  if (typeof str === 'number') return str;
+  str = String(str).trim().replace(/,/g, '');
+  const m = str.match(/^([\d.]+)\s*([KMBT]?)$/i);
+  if (!m) return parseFloat(str) || 0;
+  const v = parseFloat(m[1]);
+  const s = { k: 1e3, m: 1e6, b: 1e9, t: 1e12 }[m[2].toLowerCase()] || 1;
+  return v * s;
+}
+
+function formatDuration(hours) {
+  if (!isFinite(hours) || hours <= 0) return '—';
+  const totalSec = Math.round(hours * 3600);
+  const d = Math.floor(totalSec / 86400);
+  const h = Math.floor((totalSec % 86400) / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  const parts = [];
+  if (d) parts.push(d + 'd');
+  if (h) parts.push(h + 'h');
+  if (m) parts.push(m + 'm');
+  if (s || !parts.length) parts.push(s + 's');
+  return parts.join(' ');
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function setSliderBg(el) {
+  const pct = ((el.value - el.min) / (el.max - el.min) * 100).toFixed(1) + '%';
+  el.style.setProperty('--pct', pct);
+}
+
+function calcProduction(ratePerSec, cashPerUnit, boostPct) {
+  const petrolPerHr = ratePerSec * 3600;
+  const boostMult   = boostPct / 100;
+  const cashPerHr   = petrolPerHr * cashPerUnit * boostMult;
+  return { petrolPerHr, cashPerHr };
+}
+
+function calcGoalTime(ratePerSec, currentCash, goalAmount, cashPerUnit, boostPct) {
+  if (ratePerSec <= 0 || goalAmount <= 0) return '—';
+  const { cashPerHr } = calcProduction(ratePerSec, cashPerUnit, boostPct);
+  if (cashPerHr <= 0) return '—';
+  const remaining = goalAmount - currentCash;
+  if (remaining <= 0) return 'Complete!';
+  return formatDuration(remaining / cashPerHr);
+}
+
+function calcDrillAfford(ratePerSec, currentCash, cashPerUnit, boostPct, selections) {
+  let totalCost = 0;
+  selections.forEach(sel => {
+    const drill = DRILLS.find(d => d.name === sel.name);
+    if (drill && sel.count > 0) totalCost += drill.price * sel.count;
+  });
+  if (ratePerSec <= 0) return { totalCost, timeLeft: '—' };
+  const { cashPerHr } = calcProduction(ratePerSec, cashPerUnit, boostPct);
+  if (totalCost <= 0 || cashPerHr <= 0) return { totalCost, timeLeft: '—' };
+  const remaining = totalCost - currentCash;
+  if (remaining <= 0) return { totalCost, timeLeft: 'Complete!' };
+  return { totalCost, timeLeft: formatDuration(remaining / cashPerHr) };
+}
+
+function calcGasProfit(gasAmountStr, cashPerUnit, boostPct) {
+  const gasAmount = parseLarge(gasAmountStr);
+  const boostMult = boostPct / 100;
+  return gasAmount * cashPerUnit * boostMult;
+}
+
+const KEY = 'oilcalc_v3';
+let cfg = { pps: 0, cash: 0, cpu: 15, boost: 285 };
+
+function loadCfg() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || '{}');
+    if (s.pps   !== undefined) cfg.pps   = s.pps;
+    if (s.cash  !== undefined) cfg.cash  = s.cash;
+    if (s.cpu   !== undefined) cfg.cpu   = Math.min(15, Math.max(1, s.cpu));
+    if (s.boost !== undefined) cfg.boost = Math.min(285, Math.max(100, s.boost));
+    if (s.drillCounts) Object.assign(drillCounts, s.drillCounts);
+  } catch(_) {}
+}
+
+function saveCfg() {
+  try { localStorage.setItem(KEY, JSON.stringify({ ...cfg, drillCounts })); } catch(_) {}
+}
+
+function psRecalc() {
+  const { petrolPerHr, cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
+  setText('ps-petrolHr',   cfg.pps > 0 ? fmtPlain(petrolPerHr) : '—');
+  setText('ps-cashHr',     cfg.pps > 0 ? fmtNum(cashPerHr) : '—');
+  setText('ps-cpuLabel',   '$' + cfg.cpu);
+  setText('ps-cpuVal',     '$' + cfg.cpu);
+  setText('ps-boostLabel', cfg.boost + '%');
+  setText('ps-boostVal',   cfg.boost + '%');
+  setSliderBg(document.getElementById('ps-cpuSlider'));
+  setSliderBg(document.getElementById('ps-boostSlider'));
+}
+
+function showHint(hintId, raw, parsed) {
+  const el = document.getElementById(hintId);
+  if (!el) return;
+  if (!raw || raw.trim() === '') { el.textContent = ''; el.className = 'field-hint'; return; }
+  if (parsed > 0) {
+    el.textContent = '→ ' + parsed.toLocaleString('en-US');
+    el.className = 'field-hint ok';
+  } else {
+    el.textContent = 'Could not parse value';
+    el.className = 'field-hint err';
+  }
+}
+
+function psInit() {
+  const ppsEl   = document.getElementById('ps-pps');
+  const cashEl  = document.getElementById('ps-cash');
+  const cpuEl   = document.getElementById('ps-cpuSlider');
+  const boostEl = document.getElementById('ps-boostSlider');
+
+  if (cfg.pps  > 0) { ppsEl.value  = cfg.pps.toLocaleString('en-US'); showHint('ps-pps-hint', ppsEl.value, cfg.pps); }
+  if (cfg.cash > 0) { cashEl.value = fmtNum(cfg.cash).replace('$', ''); showHint('ps-cash-hint', cashEl.value, cfg.cash); }
+  cpuEl.value   = cfg.cpu;
+  boostEl.value = cfg.boost;
+
+  ppsEl.addEventListener('input', e => {
+    const v = parseLarge(e.target.value);
+    cfg.pps = v;
+    showHint('ps-pps-hint', e.target.value, v);
+    psRecalc(); goalsRecalc(); calcRecalc();
+  });
+
+  cashEl.addEventListener('input', e => {
+    const v = parseLarge(e.target.value);
+    cfg.cash = v;
+    showHint('ps-cash-hint', e.target.value, v);
+    goalsRecalc();
+  });
+
+  cpuEl.addEventListener('input', e => {
+    cfg.cpu = parseInt(e.target.value);
+    psRecalc(); goalsRecalc(); calcRecalc();
+  });
+
+  boostEl.addEventListener('input', e => {
+    cfg.boost = parseInt(e.target.value);
+    psRecalc(); goalsRecalc(); calcRecalc();
+  });
+
+  document.getElementById('ps-save').addEventListener('click', () => {
+    saveCfg();
+    const btn = document.getElementById('ps-save');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
+    btn.style.background = '#15803d';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1800);
+  });
+
+  psRecalc();
+}
+
+function buildDrillSelector() {
+  const container = document.getElementById('drillSelector');
+  container.innerHTML = '';
+  DRILLS.forEach(drill => {
+    const row = document.createElement('div');
+    row.className = 'drill-row';
+    row.innerHTML = `
+      <div class="drill-info">
+        <div class="drill-name">${drill.name}</div>
+        <div class="drill-price">${fmtNum(drill.price)} &nbsp;·&nbsp; ${drill.rate}/s</div>
+      </div>
+      <div class="drill-counter">
+        <button class="cnt-btn" data-drill="${drill.name}" data-dir="-1">−</button>
+        <span class="cnt-val" id="cnt-${drill.name.replace(/\s/g, '_')}">${drillCounts[drill.name]}</span>
+        <button class="cnt-btn" data-drill="${drill.name}" data-dir="1">+</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('.cnt-btn');
+    if (!btn) return;
+    const name = btn.dataset.drill;
+    const dir  = parseInt(btn.dataset.dir);
+    drillCounts[name] = Math.max(0, (drillCounts[name] || 0) + dir);
+    const valEl = document.getElementById('cnt-' + name.replace(/\s/g, '_'));
+    if (valEl) valEl.textContent = drillCounts[name];
+    saveCfg();
+    goalsRecalc();
+  });
+}
+
+function goalsRecalc() {
+  const selections = DRILLS.map(d => ({ name: d.name, count: drillCounts[d.name] || 0 }));
+  const { totalCost, timeLeft } = calcDrillAfford(cfg.pps, cfg.cash, cfg.cpu, cfg.boost, selections);
+  const anyDrills = selections.some(s => s.count > 0);
+  setText('g-totalCost', anyDrills ? fmtNum(totalCost) : '—');
+
+  const timeEl = document.getElementById('g-drillTime');
+  if (timeEl) {
+    timeEl.textContent = anyDrills ? timeLeft : '—';
+    timeEl.className   = 'iv' + (timeLeft === 'Complete!' ? ' affordable' : '');
+  }
+
+  const goalAmt  = parseLarge(document.getElementById('g-goalAmt')?.value);
+  const goalTime = calcGoalTime(cfg.pps, cfg.cash, goalAmt, cfg.cpu, cfg.boost);
+  const gtEl = document.getElementById('g-goalTime');
+  if (gtEl) {
+    gtEl.textContent = goalTime;
+    gtEl.className   = 'iv' + (goalTime === 'Complete!' ? ' affordable' : '');
+  }
+}
+
+function goalsInit() {
+  buildDrillSelector();
+  document.getElementById('g-goalAmt').addEventListener('input', goalsRecalc);
+  goalsRecalc();
+}
+
+function calcRecalc() {
+  const gasStr = document.getElementById('calc-gas')?.value || '';
+  const profit = calcGasProfit(gasStr, cfg.cpu, cfg.boost);
+  setText('calc-profit', gasStr ? fmtNum(profit) : '$0.00');
+}
+
+function calcInit() {
+  document.getElementById('calc-gas').addEventListener('input', calcRecalc);
+  calcRecalc();
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelector('[data-tab="' + name + '"]').classList.add('active');
+}
+
+document.querySelectorAll('.nav-item').forEach(n => {
+  n.addEventListener('click', () => switchTab(n.dataset.tab));
+});
+
+(function() {
+  const trigger = document.getElementById('gasToggle');
+  const body    = document.getElementById('gasBody');
+  if (!trigger || !body) return;
+  trigger.addEventListener('click', () => {
+    const open = body.classList.toggle('open');
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+
+loadCfg();
+psInit();
+goalsInit();
+calcInit();
+</script>
+</body>
+</html>
