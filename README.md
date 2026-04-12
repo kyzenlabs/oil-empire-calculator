@@ -8,7 +8,7 @@ Originally inspired by the desktop application by h.263 (nitro.), this version p
 
 ## 🚀 Web Version
 
-👉 https://kyzenlabs.github.io/oil-empire-calculator/
+👉 https://crudekings.kyzen7.dev/
 
 ---
 
