@@ -3,9 +3,6 @@
   functions = "netlify/functions"
   command   = "echo 'no build step'"
 
-[functions]
-  node_bundler = "esbuild"
-
 [[redirects]]
   from   = "/api/*"
   to     = "/.netlify/functions/:splat"
