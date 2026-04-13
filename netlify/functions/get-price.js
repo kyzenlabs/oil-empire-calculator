@@ -14,17 +14,14 @@ exports.handler = async () => {
     "Cache-Control": "no-store",
   };
 
-  if (latestPrice === null) {
-    return {
-      statusCode: 404,
-      headers,
-      body: JSON.stringify({ ok: false, error: "No price received yet", price: null, updatedAt: null }),
-    };
-  }
-
   return {
     statusCode: 200,
     headers,
-    body: JSON.stringify({ ok: true, price: latestPrice, updatedAt }),
+    body: JSON.stringify({
+      ok: latestPrice !== null,
+      price: latestPrice,
+      updatedAt: updatedAt,
+      error: latestPrice === null ? "No price received yet" : null,
+    }),
   };
 };
