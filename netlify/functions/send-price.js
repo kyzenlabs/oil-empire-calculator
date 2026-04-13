@@ -1,21 +1,6 @@
-// netlify/functions/send-price.js
-//
-// Receives a gas price from your Roblox game (or any trusted caller),
-// validates the API key, stores it in memory, and forwards it to Discord.
-//
-// Environment variables required (set in Netlify dashboard, never in code):
-//   DISCORD_WEBHOOK_URL  — your full Discord webhook URL
-//   API_SECRET_KEY       — a long random string you generate yourself
-
-// Module-level variable persists for the lifetime of the Lambda instance.
-// NOTE: Netlify Functions are stateless — this resets on cold starts.
-// For true persistence across restarts, swap this for a KV store like
-// Netlify Blobs, Upstash Redis, or a free PlanetScale DB row.
-let latestPrice = null;
-let lastUpdated = null;
+const { getStore } = require("@netlify/blobs");
 
 exports.handler = async (event) => {
-  // Only accept POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -23,16 +8,11 @@ exports.handler = async (event) => {
     };
   }
 
-  // ── API key validation ──────────────────────────────────────────────────
-  // The key must arrive in the x-api-key header.
-  // process.env.API_SECRET_KEY is injected by Netlify — it never touches
-  // your repo or your frontend bundle.
   const incomingKey = event.headers["x-api-key"] || "";
   const expectedKey = process.env.API_SECRET_KEY || "";
 
   if (!expectedKey) {
-    // Mis-configuration guard — fail loudly in logs, not to the caller
-    console.error("API_SECRET_KEY environment variable is not set!");
+    console.error("API_SECRET_KEY is not set in environment variables");
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Server misconfiguration" }),
@@ -46,7 +26,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // ── Parse body ──────────────────────────────────────────────────────────
   let body;
   try {
     body = JSON.parse(event.body || "{}");
@@ -65,14 +44,14 @@ exports.handler = async (event) => {
     };
   }
 
-  // ── Store in memory ─────────────────────────────────────────────────────
-  latestPrice = price;
-  lastUpdated = new Date().toISOString();
+  const updatedAt = new Date().toISOString();
 
-  // ── Forward to Discord ──────────────────────────────────────────────────
+  const store = getStore("gas-price");
+  await store.setJSON("latest", { price, updatedAt });
+
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL || "";
   if (!webhookUrl) {
-    console.error("DISCORD_WEBHOOK_URL environment variable is not set!");
+    console.error("DISCORD_WEBHOOK_URL is not set in environment variables");
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Server misconfiguration" }),
@@ -98,14 +77,14 @@ exports.handler = async (event) => {
 
     if (!discordRes.ok) {
       const text = await discordRes.text();
-      console.error("Discord webhook error:", discordRes.status, text);
+      console.error("Discord webhook returned error:", discordRes.status, text);
       return {
         statusCode: 502,
         body: JSON.stringify({ error: "Discord delivery failed" }),
       };
     }
   } catch (err) {
-    console.error("Fetch to Discord failed:", err.message);
+    console.error("Could not reach Discord:", err.message);
     return {
       statusCode: 502,
       body: JSON.stringify({ error: "Could not reach Discord" }),
@@ -115,15 +94,6 @@ exports.handler = async (event) => {
   return {
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      ok: true,
-      price,
-      updatedAt: lastUpdated,
-    }),
+    body: JSON.stringify({ ok: true, price, updatedAt }),
   };
 };
-
-// Export price state so get-price.js can import it when bundled together.
-// (Works only if both functions share the same Lambda instance, which is
-//  not guaranteed. For reliable cross-function state, use external storage.)
-exports.getState = () => ({ latestPrice, lastUpdated });
