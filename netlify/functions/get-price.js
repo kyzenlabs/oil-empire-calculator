@@ -1,22 +1,20 @@
 let sendPriceState;
 try {
   sendPriceState = require("./send-price").state;
-} catch {
+} catch (_) {
   sendPriceState = () => ({ latestPrice: null, updatedAt: null });
 }
 
 exports.handler = async () => {
   const { latestPrice, updatedAt } = sendPriceState();
 
-  const headers = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Cache-Control": "no-store",
-  };
-
   return {
     statusCode: 200,
-    headers,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Cache-Control": "no-store",
+    },
     body: JSON.stringify({
       ok: latestPrice !== null,
       price: latestPrice,
