@@ -1,7 +1,6 @@
 {
-  "name": "oil-empire-backend",
+  "name": "oil-empire-calculator",
   "version": "1.0.0",
-  "description": "Netlify serverless functions for Oil Empire gas price relay",
   "private": true,
   "engines": {
     "node": ">=18.0.0"
