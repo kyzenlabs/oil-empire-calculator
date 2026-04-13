@@ -213,6 +213,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 }
 .slider-val-input::-webkit-inner-spin-button{-webkit-appearance:none;}
 .slider-val-input:focus{border-color:var(--blue-hi);box-shadow:0 0 0 2px var(--blue-lo);}
+
+/* ── Gas Price Banner ── */
+.gas-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 16px;margin-bottom:16px;
+}
+.gas-banner-left{display:flex;align-items:center;gap:8px;}
+.gas-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--dim);
+  flex-shrink:0;transition:background 0.4s;
+}
+.gas-dot.live{background:var(--green);}
+.gas-banner-label{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.4px;}
+.gas-banner-right{display:flex;align-items:baseline;gap:8px;}
+.gas-price-num{
+  font-size:24px;font-weight:700;color:var(--dim);
+  transition:color 0.4s;letter-spacing:-0.5px;font-family:var(--font);
+}
+.gas-price-age{font-size:10px;color:var(--muted);min-width:52px;text-align:right;}
+.gas-price-num.red   {color:#ef4444;}
+.gas-price-num.green {color:#22c55e;}
+.gas-price-num.purple{color:#a855f7;}
 </style>
 </head>
 <body>
@@ -285,6 +308,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           <span data-i18n="stats_title">Stats</span>
+        </div>
+
+        <!-- Live Gas Price Banner -->
+        <div class="gas-banner">
+          <div class="gas-banner-left">
+            <span class="gas-dot" id="gas-dot"></span>
+            <span class="gas-banner-label" data-i18n="live_gas_price">Current Gas Price</span>
+          </div>
+          <div class="gas-banner-right">
+            <span class="gas-price-num" id="gas-price-num">—</span>
+            <span class="gas-price-age" id="gas-price-age"></span>
+          </div>
         </div>
         <div class="stat-line"><span data-i18n="petrol_hr">Petrol/hr:</span> <b id="ps-petrolHr">—</b></div>
         <div class="stat-line"><span data-i18n="cash_hr">Cash/hr:</span> <span class="stat-green" id="ps-cashHr">—</span></div>
@@ -521,7 +556,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </button>
   </div>
 </div>
-<script src="/gas-price.js"></script>
+
 <script>
 const DRILLS = [
   { name_key:"drill_basic",       name:"Basic Drill",             price:500,         rate:1    },
@@ -590,7 +625,7 @@ const decorCounts = Object.fromEntries(DECORATIONS.map(d => [d.name, 0]));
 
 const LANGS = {
   en: {
-    nav_production:"Production Stats", nav_goals:"Goals", nav_layout:"Layout Designer",
+    nav_production:"Production Stats", live_gas_price:"Current Gas Price", nav_goals:"Goals", nav_layout:"Layout Designer",
     nav_settings:"Settings", nav_about:"About",
     rate_title:"Rate", stats_title:"Stats",
     petrol_per_sec:"Petrol per second:", current_cash:"Current Cash (optional):",
@@ -636,7 +671,7 @@ const LANGS = {
     dec_fountain:"Fountain", dec_oil_mon:"Oil Monument", dec_throne:"Throne",
   },
   es: {
-    nav_production:"Estadísticas", nav_goals:"Metas", nav_layout:"Diseñador",
+    nav_production:"Estadísticas", live_gas_price:"Precio actual del gas", nav_goals:"Metas", nav_layout:"Diseñador",
     nav_settings:"Ajustes", nav_about:"Acerca de",
     rate_title:"Tasa", stats_title:"Estadísticas",
     petrol_per_sec:"Petróleo por segundo:", current_cash:"Efectivo actual (opcional):",
@@ -680,7 +715,7 @@ const LANGS = {
     dec_fountain:"Fuente", dec_oil_mon:"Monumento al Petróleo", dec_throne:"Trono",
   },
   fr: {
-    nav_production:"Statistiques", nav_goals:"Objectifs", nav_layout:"Concepteur",
+    nav_production:"Statistiques", live_gas_price:"Prix actuel du gaz", nav_goals:"Objectifs", nav_layout:"Concepteur",
     nav_settings:"Paramètres", nav_about:"À propos",
     rate_title:"Taux", stats_title:"Statistiques",
     petrol_per_sec:"Pétrole par seconde:", current_cash:"Argent actuel (optionnel):",
@@ -724,7 +759,7 @@ const LANGS = {
     dec_fountain:"Fontaine", dec_oil_mon:"Monument au Pétrole", dec_throne:"Trône",
   },
   de: {
-    nav_production:"Produktion", nav_goals:"Ziele", nav_layout:"Layout-Designer",
+    nav_production:"Produktion", live_gas_price:"Aktueller Gaspreis", nav_goals:"Ziele", nav_layout:"Layout-Designer",
     nav_settings:"Einstellungen", nav_about:"Über",
     rate_title:"Rate", stats_title:"Statistiken",
     petrol_per_sec:"Benzin pro Sekunde:", current_cash:"Aktuelles Geld (optional):",
@@ -768,7 +803,7 @@ const LANGS = {
     dec_fountain:"Brunnen", dec_oil_mon:"Öl-Monument", dec_throne:"Thron",
   },
   pt: {
-    nav_production:"Produção", nav_goals:"Objetivos", nav_layout:"Designer",
+    nav_production:"Produção", live_gas_price:"Preço atual do gás", nav_goals:"Objetivos", nav_layout:"Designer",
     nav_settings:"Configurações", nav_about:"Sobre",
     rate_title:"Taxa", stats_title:"Estatísticas",
     petrol_per_sec:"Petróleo por segundo:", current_cash:"Dinheiro atual (opcional):",
@@ -812,7 +847,7 @@ const LANGS = {
     dec_fountain:"Fonte", dec_oil_mon:"Monumento ao Petróleo", dec_throne:"Trono",
   },
   zh: {
-    nav_production:"生产统计", nav_goals:"目标", nav_layout:"布局设计",
+    nav_production:"生产统计", live_gas_price:"当前天然气价格", nav_goals:"目标", nav_layout:"布局设计",
     nav_settings:"设置", nav_about:"关于",
     rate_title:"速率", stats_title:"统计",
     petrol_per_sec:"每秒石油:", current_cash:"当前现金（可选）:",
@@ -856,7 +891,7 @@ const LANGS = {
     dec_fountain:"喷泉", dec_oil_mon:"石油纪念碑", dec_throne:"王座",
   },
   ja: {
-    nav_production:"生産統計", nav_goals:"目標", nav_layout:"レイアウト",
+    nav_production:"生産統計", live_gas_price:"現在のガス価格", nav_goals:"目標", nav_layout:"レイアウト",
     nav_settings:"設定", nav_about:"について",
     rate_title:"レート", stats_title:"統計",
     petrol_per_sec:"毎秒石油:", current_cash:"現在の現金（任意）:",
@@ -900,7 +935,7 @@ const LANGS = {
     dec_fountain:"噴水", dec_oil_mon:"石油記念碑", dec_throne:"王座",
   },
   ko: {
-    nav_production:"생산 통계", nav_goals:"목표", nav_layout:"레이아웃",
+    nav_production:"생산 통계", live_gas_price:"현재 가스 가격", nav_goals:"목표", nav_layout:"레이아웃",
     nav_settings:"설정", nav_about:"정보",
     rate_title:"속도", stats_title:"통계",
     petrol_per_sec:"초당 석유:", current_cash:"현재 현금 (선택):",
@@ -944,7 +979,7 @@ const LANGS = {
     dec_fountain:"분수", dec_oil_mon:"석유 기념비", dec_throne:"왕좌",
   },
   ru: {
-    nav_production:"Производство", nav_goals:"Цели", nav_layout:"Дизайнер",
+    nav_production:"Производство", live_gas_price:"Текущая цена газа", nav_goals:"Цели", nav_layout:"Дизайнер",
     nav_settings:"Настройки", nav_about:"О приложении",
     rate_title:"Скорость", stats_title:"Статистика",
     petrol_per_sec:"Нефть в секунду:", current_cash:"Текущие деньги (необязательно):",
@@ -988,7 +1023,7 @@ const LANGS = {
     dec_fountain:"Фонтан", dec_oil_mon:"Нефтяной памятник", dec_throne:"Трон",
   },
   ar: {
-    nav_production:"إحصائيات", nav_goals:"الأهداف", nav_layout:"المصمم",
+    nav_production:"إحصائيات", live_gas_price:"سعر الغاز الحالي", nav_goals:"الأهداف", nav_layout:"المصمم",
     nav_settings:"الإعدادات", nav_about:"حول",
     rate_title:"المعدل", stats_title:"الإحصائيات",
     petrol_per_sec:"نفط في الثانية:", current_cash:"النقد الحالي (اختياري):",
@@ -1032,7 +1067,7 @@ const LANGS = {
     dec_fountain:"نافورة", dec_oil_mon:"نصب النفط", dec_throne:"عرش",
   },
   tr: {
-    nav_production:"Üretim", nav_goals:"Hedefler", nav_layout:"Tasarımcı",
+    nav_production:"Üretim", live_gas_price:"Güncel gaz fiyatı", nav_goals:"Hedefler", nav_layout:"Tasarımcı",
     nav_settings:"Ayarlar", nav_about:"Hakkında",
     rate_title:"Hız", stats_title:"İstatistikler",
     petrol_per_sec:"Saniyede petrol:", current_cash:"Mevcut nakit (isteğe bağlı):",
@@ -1076,7 +1111,7 @@ const LANGS = {
     dec_fountain:"Çeşme", dec_oil_mon:"Petrol Anıtı", dec_throne:"Taht",
   },
   pl: {
-    nav_production:"Produkcja", nav_goals:"Cele", nav_layout:"Projektant",
+    nav_production:"Produkcja", live_gas_price:"Aktualna cena gazu", nav_goals:"Cele", nav_layout:"Projektant",
     nav_settings:"Ustawienia", nav_about:"O aplikacji",
     rate_title:"Prędkość", stats_title:"Statystyki",
     petrol_per_sec:"Ropa na sekundę:", current_cash:"Obecna gotówka (opcjonalnie):",
@@ -1537,6 +1572,86 @@ initGoalAccordion('ga-decorations');
 applyLang();
 psRecalc();
 calcRecalc();
+
+
+(function(){
+  const ENDPOINT  = '/.netlify/functions/get-price';
+  const POLL_MS   = 10000;
+  const MAX_RETRY = 5;
+  const RETRY_MS  = 3000;
+  let lastUpdatedAt = null;
+
+  function getColorClass(price){
+    if(price>=14) return 'purple';
+    if(price>=10) return 'green';
+    return 'red';
+  }
+  function formatAge(iso){
+    if(!iso) return '';
+    const s=Math.floor((Date.now()-new Date(iso).getTime())/1000);
+    if(s<5)    return 'just now';
+    if(s<60)   return s+'s ago';
+    if(s<3600) return Math.floor(s/60)+'m ago';
+    return Math.floor(s/3600)+'h ago';
+  }
+
+  function setLive(price, updatedAt){
+    lastUpdatedAt = updatedAt;
+    const num = document.getElementById('gas-price-num');
+    const age = document.getElementById('gas-price-age');
+    const dot = document.getElementById('gas-dot');
+    if(!num) return;
+    num.textContent = '$'+price;
+    num.className   = 'gas-price-num '+getColorClass(price);
+    if(age) age.textContent = formatAge(updatedAt);
+    if(dot){ dot.className='gas-dot live'; }
+    document.dispatchEvent(new CustomEvent('gasPriceUpdated',{detail:{price,updatedAt}}));
+  }
+
+  function setOffline(){
+    const dot = document.getElementById('gas-dot');
+    if(dot) dot.className='gas-dot';
+  }
+
+  function clearBanner(){
+    const num = document.getElementById('gas-price-num');
+    const age = document.getElementById('gas-price-age');
+    const dot = document.getElementById('gas-dot');
+    if(num){ num.textContent='—'; num.className='gas-price-num'; }
+    if(age) age.textContent='';
+    if(dot) dot.className='gas-dot';
+  }
+
+
+  setInterval(function(){
+    if(!lastUpdatedAt) return;
+    const age=document.getElementById('gas-price-age');
+    if(age) age.textContent=formatAge(lastUpdatedAt);
+  },1000);
+
+  async function fetchWithRetry(){
+    for(let i=0;i<=MAX_RETRY;i++){
+      try{
+        const res  = await fetch(ENDPOINT,{cache:'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        if(data.ok && data.price!==null){
+          setLive(data.price, data.updatedAt);
+        } else {
+          clearBanner();
+        }
+        return;
+      } catch(_){
+        if(i<MAX_RETRY) await new Promise(r=>setTimeout(r,RETRY_MS));
+      }
+    }
+    setOffline(); 
+  }
+
+  fetchWithRetry();
+  setInterval(fetchWithRetry, POLL_MS);
+  window.refreshGasPrice = fetchWithRetry;
+})();
 </script>
 </body>
 </html>
