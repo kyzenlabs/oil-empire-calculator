@@ -197,6 +197,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .swatch{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:border-color 0.15s,transform 0.12s;outline:none;}
 .swatch:hover{transform:scale(1.12);}
 .swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(--blue-hi);}
+.slider-val-input{
+  width:62px;
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:6px;
+  color:var(--text2);
+  font-family:var(--font);
+  font-size:13px;
+  font-weight:600;
+  padding:2px 6px;
+  text-align:center;
+  outline:none;
+  -moz-appearance:textfield;
+}
+.slider-val-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.slider-val-input:focus{border-color:var(--blue-hi);box-shadow:0 0 0 2px var(--blue-lo);}
 </style>
 </head>
 <body>
@@ -284,7 +300,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="slider-row">
           <div class="slider-row-top">
             <span class="field-lbl" data-i18n="boost_label">Boost multiplier (100% – 385%)</span>
-            <span class="slider-val" id="ps-boostVal">285%</span>
+            <input type="number" id="ps-boostVal" class="slider-val-input" value="285" min="100" max="385" step="1"/>
           </div>
           <input type="range" id="ps-boostSlider" min="100" max="385" value="285"/>
         </div>
@@ -1362,7 +1378,8 @@ function psRecalc() {
   setText('ps-cpuLabel', '$'+cfg.cpu);
   setText('ps-cpuVal',   '$'+cfg.cpu);
   setText('ps-boostLabel', cfg.boost+'%');
-  setText('ps-boostVal',   cfg.boost+'%');
+  const bv = document.getElementById('ps-boostVal');
+  if (bv && document.activeElement !== bv) bv.value = cfg.boost;
   setSliderBg(document.getElementById('ps-cpuSlider'));
   setSliderBg(document.getElementById('ps-boostSlider'));
 }
@@ -1412,6 +1429,8 @@ const boostEl= document.getElementById('ps-boostSlider');
 if (cfg.pps>0)  { ppsEl.value  = cfg.pps.toLocaleString('en-US'); showHint('ps-pps-hint', ppsEl.value, cfg.pps); }
 if (cfg.cash>0) { cashEl.value = fmtNum(cfg.cash).replace('$',''); showHint('ps-cash-hint', cashEl.value, cfg.cash); }
 cpuEl.value = cfg.cpu; boostEl.value = cfg.boost;
+const boostValEl = document.getElementById('ps-boostVal');
+if (boostValEl) boostValEl.value = cfg.boost;
 
 if (cfg.accent) applyAccent(cfg.accent.color, cfg.accent.hi);
 
@@ -1445,7 +1464,31 @@ cashEl.addEventListener('input', e => {
   goalsRecalc();
 });
 cpuEl.addEventListener('input', e => { cfg.cpu=parseInt(e.target.value); psRecalc(); goalsRecalc(); calcRecalc(); });
-boostEl.addEventListener('input', e => { cfg.boost=parseInt(e.target.value); psRecalc(); goalsRecalc(); calcRecalc(); });
+boostEl.addEventListener('input', e => {
+  cfg.boost = parseInt(e.target.value);
+  const bv = document.getElementById('ps-boostVal');
+  if (bv) bv.value = cfg.boost;
+  psRecalc(); goalsRecalc(); calcRecalc();
+});
+
+document.getElementById('ps-boostVal').addEventListener('input', e => {
+  let v = parseInt(e.target.value) || 100;
+  v = Math.min(385, Math.max(100, v));
+  cfg.boost = v;
+  boostEl.value = v;
+  setSliderBg(boostEl);
+  psRecalc(); goalsRecalc(); calcRecalc();
+});
+
+document.getElementById('ps-boostVal').addEventListener('blur', e => {
+  let v = parseInt(e.target.value) || 100;
+  v = Math.min(385, Math.max(100, v));
+  e.target.value = v;
+  cfg.boost = v;
+  boostEl.value = v;
+  setSliderBg(boostEl);
+  psRecalc(); goalsRecalc(); calcRecalc();
+});
 
 document.getElementById('ps-save').addEventListener('click', () => {
   saveCfg();
