@@ -236,6 +236,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .gas-price-num.red   {color:#ef4444;}
 .gas-price-num.green {color:#22c55e;}
 .gas-price-num.purple{color:#a855f7;}
+/* ── Earnings Breakdown ── */
+.earnings-wrap{border-top:1px solid var(--border);margin-top:4px;padding-top:4px;}
+.earnings-trigger{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  background:none;border:none;cursor:pointer;font-family:var(--font);
+  font-size:12px;font-weight:500;color:var(--muted);padding:10px 0;
+  transition:color 0.14s;
+}
+.earnings-trigger:hover{color:var(--text);}
+.earnings-chevron{transition:transform 0.22s ease;color:var(--muted);flex-shrink:0;}
+.earnings-trigger[aria-expanded="true"] .earnings-chevron{transform:rotate(180deg);}
+.earnings-body{display:none;padding-bottom:4px;}
+.earnings-body.open{display:block;}
+.earnings-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  margin-top:6px;
+}
+.earn-row{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:6px;padding:7px 10px;gap:8px;
+}
+.earn-label{font-size:11px;color:var(--muted);white-space:nowrap;}
+.earn-label span{font-size:9px;color:var(--dim);margin-left:3px;}
+.earn-val{font-size:12px;font-weight:600;color:var(--green);white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -338,6 +365,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <input type="number" id="ps-boostVal" class="slider-val-input" value="285" min="100" max="385" step="1"/>
           </div>
           <input type="range" id="ps-boostSlider" min="100" max="385" value="285"/>
+        </div>
+
+        <!-- Earnings Breakdown -->
+        <div class="earnings-wrap">
+          <button class="earnings-trigger" id="earningsTrigger">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span>Earnings Over Time</span>
+            </div>
+            <svg class="earnings-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="earnings-body" id="earningsBody">
+            <div class="earnings-grid" id="earningsGrid"></div>
+          </div>
         </div>
       </div>
 
@@ -1406,6 +1447,39 @@ function goalsRecalc() {
   if (gtEl) { gtEl.textContent=goalTime; gtEl.className='iv'+(goalTime===t('complete')?' affordable':''); }
 }
 
+function getDayLabel(hours) {
+  const days = hours / 24;
+  if (days < 1) return '';
+  if (days % 1 === 0) return '(' + days + (days === 1 ? ' Day' : ' Days') + ')';
+  // half/1.5/2.5 etc
+  const frac = days % 1;
+  if (Math.abs(frac - 0.5) < 0.01) return '(' + days.toFixed(1) + ' Days)';
+  return '(' + days.toFixed(1) + ' Days)';
+}
+
+const EARN_PERIODS = [
+  { label:'30 min', hours:0.5 },
+  { label:'1 hr',   hours:1   },
+  { label:'2 hr',   hours:2   },
+  { label:'3 hr',   hours:3   },
+  { label:'4 hr',   hours:4   },
+  { label:'5 hr',   hours:5   },
+  { label:'6 hr',   hours:6   },
+  { label:'7 hr',   hours:7   },
+  { label:'8 hr',   hours:8   },
+  { label:'9 hr',   hours:9   },
+  { label:'10 hr',  hours:10  },
+  { label:'11 hr',  hours:11  },
+  { label:'12 hr',  hours:12  },
+  { label:'16 hr',  hours:16  },
+  { label:'20 hr',  hours:20  },
+  { label:'24 hr',  hours:24  },
+  { label:'36 hr',  hours:36  },
+  { label:'48 hr',  hours:48  },
+  { label:'60 hr',  hours:60  },
+  { label:'72 hr',  hours:72  },
+];
+
 function psRecalc() {
   const { petrolPerHr, cashPerHr } = calcProduction(cfg.pps, cfg.cpu, cfg.boost);
   setText('ps-petrolHr', cfg.pps>0 ? fmtPlain(petrolPerHr) : '—');
@@ -1417,6 +1491,23 @@ function psRecalc() {
   if (bv && document.activeElement !== bv) bv.value = cfg.boost;
   setSliderBg(document.getElementById('ps-cpuSlider'));
   setSliderBg(document.getElementById('ps-boostSlider'));
+
+  // Rebuild earnings grid
+  const grid = document.getElementById('earningsGrid');
+  if (grid) {
+    if (cfg.pps <= 0 || cashPerHr <= 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1;font-size:11px;color:var(--muted);padding:6px 0;">Enter petrol/sec to see earnings</div>';
+    } else {
+      grid.innerHTML = EARN_PERIODS.map(p => {
+        const earned = cashPerHr * p.hours;
+        const dayLbl = getDayLabel(p.hours);
+        return `<div class="earn-row">
+          <span class="earn-label">${p.label}${dayLbl ? ' <span>'+dayLbl+'</span>' : ''}</span>
+          <span class="earn-val">${fmtNum(earned)}</span>
+        </div>`;
+      }).join('');
+    }
+  }
 }
 
 function calcRecalc() {
@@ -1563,6 +1654,13 @@ const gasBody   = document.getElementById('gasBody');
 gasToggle.addEventListener('click', () => {
   const open = gasBody.classList.toggle('open');
   gasToggle.setAttribute('aria-expanded', open?'true':'false');
+});
+
+const earningsTrigger = document.getElementById('earningsTrigger');
+const earningsBody    = document.getElementById('earningsBody');
+earningsTrigger.addEventListener('click', () => {
+  const open = earningsBody.classList.toggle('open');
+  earningsTrigger.setAttribute('aria-expanded', open?'true':'false');
 });
 
 initGoalAccordion('ga-drills');
