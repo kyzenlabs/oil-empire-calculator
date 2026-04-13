@@ -20,7 +20,7 @@ Originally inspired by the desktop application by h.263 (nitro.), this version p
 - Real-time production updates
 - Adjustable:
   - Cash per unit ($1–$15)
-  - Boost multiplier (100%–285%)
+  - Boost multiplier (100%–385%)
 
 ---
 
