@@ -1,0 +1,19 @@
+{
+  "name": "oil-empire-backend",
+  "version": "1.0.0",
+  "description": "Netlify serverless functions for Oil Empire gas price relay",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
