@@ -1,4 +1,12 @@
-const { getStore } = require("@netlify/blobs");
+// No external dependencies — pure Node.js built-ins only.
+// Stores price in module-level memory (resets on cold start, fine for
+// a value that updates every ~30s from the game).
+
+let latestPrice = null;
+let updatedAt   = null;
+
+// Export state so get-price.js can read it when running in the same instance.
+exports.state = () => ({ latestPrice, updatedAt });
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -9,10 +17,8 @@ exports.handler = async (event) => {
   const expectedKey = process.env.API_SECRET_KEY || "";
 
   if (!expectedKey) {
-    console.error("API_SECRET_KEY env var not set");
-    return { statusCode: 500, body: JSON.stringify({ error: "Server misconfiguration" }) };
+    return { statusCode: 500, body: JSON.stringify({ error: "API_SECRET_KEY not set" }) };
   }
-
   if (incomingKey !== expectedKey) {
     return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized" }) };
   }
@@ -29,10 +35,8 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: "price must be a non-negative number" }) };
   }
 
-  const updatedAt = new Date().toISOString();
-
-  const store = getStore("gas-price");
-  await store.setJSON("latest", { price, updatedAt });
+  latestPrice = price;
+  updatedAt   = new Date().toISOString();
 
   return {
     statusCode: 200,
