@@ -1573,9 +1573,9 @@ applyLang();
 psRecalc();
 calcRecalc();
 
-
+// ── Live Gas Price ─────────────────────────────────────────────────────
 (function(){
-  const ENDPOINT  = '/.netlify/functions/get-price';
+  const ENDPOINT  = '/.netlify/functions/gas-price';
   const POLL_MS   = 10000;
   const MAX_RETRY = 5;
   const RETRY_MS  = 3000;
@@ -1622,7 +1622,7 @@ calcRecalc();
     if(dot) dot.className='gas-dot';
   }
 
-
+  // Age ticker — no network, just updates the label every second
   setInterval(function(){
     if(!lastUpdatedAt) return;
     const age=document.getElementById('gas-price-age');
@@ -1645,7 +1645,7 @@ calcRecalc();
         if(i<MAX_RETRY) await new Promise(r=>setTimeout(r,RETRY_MS));
       }
     }
-    setOffline(); 
+    setOffline(); // keep last price visible, grey the dot
   }
 
   fetchWithRetry();
