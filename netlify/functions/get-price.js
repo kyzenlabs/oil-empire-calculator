@@ -1,8 +1,12 @@
-const { getStore } = require("@netlify/blobs");
+let sendPriceState;
+try {
+  sendPriceState = require("./send-price").state;
+} catch {
+  sendPriceState = () => ({ latestPrice: null, updatedAt: null });
+}
 
 exports.handler = async () => {
-  const store = getStore("gas-price");
-  const data = await store.get("latest", { type: "json" }).catch(() => null);
+  const { latestPrice, updatedAt } = sendPriceState();
 
   const headers = {
     "Content-Type": "application/json",
@@ -10,7 +14,7 @@ exports.handler = async () => {
     "Cache-Control": "no-store",
   };
 
-  if (!data) {
+  if (latestPrice === null) {
     return {
       statusCode: 404,
       headers,
@@ -21,6 +25,6 @@ exports.handler = async () => {
   return {
     statusCode: 200,
     headers,
-    body: JSON.stringify({ ok: true, price: data.price, updatedAt: data.updatedAt }),
+    body: JSON.stringify({ ok: true, price: latestPrice, updatedAt }),
   };
 };
