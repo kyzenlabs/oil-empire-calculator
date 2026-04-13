@@ -1,11 +1,7 @@
-// No external dependencies — pure Node.js built-ins only.
-// Stores price in module-level memory (resets on cold start, fine for
-// a value that updates every ~30s from the game).
-
 let latestPrice = null;
 let updatedAt   = null;
 
-// Export state so get-price.js can read it when running in the same instance.
+
 exports.state = () => ({ latestPrice, updatedAt });
 
 exports.handler = async (event) => {
