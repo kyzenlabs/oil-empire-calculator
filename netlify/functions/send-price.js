@@ -34,38 +34,6 @@ exports.handler = async (event) => {
   const store = getStore("gas-price");
   await store.setJSON("latest", { price, updatedAt });
 
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL || "";
-  if (!webhookUrl) {
-    console.error("DISCORD_WEBHOOK_URL env var not set");
-    return { statusCode: 500, body: JSON.stringify({ error: "Server misconfiguration" }) };
-  }
-
-  try {
-    const discordRes = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        embeds: [{
-          title: "⛽ Gas Price Update",
-          color: 0x2563eb,
-          fields: [
-            { name: "New Price", value: `$${price} per unit`, inline: true },
-            { name: "Updated", value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true },
-          ],
-          footer: { text: "Oil Empire Calculator" },
-        }],
-      }),
-    });
-
-    if (!discordRes.ok) {
-      console.error("Discord error:", discordRes.status, await discordRes.text());
-      return { statusCode: 502, body: JSON.stringify({ error: "Discord delivery failed" }) };
-    }
-  } catch (err) {
-    console.error("Could not reach Discord:", err.message);
-    return { statusCode: 502, body: JSON.stringify({ error: "Could not reach Discord" }) };
-  }
-
   return {
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
