@@ -18,9 +18,9 @@
   --text2:     #e2e8f0;
   --muted:     #505a66;
   --dim:       #252525;
-  --blue:      #2563eb;
-  --blue-hi:   #3b82f6;
-  --blue-lo:   rgba(59,130,246,0.15);
+  --blue:      #e8a020;
+  --blue-hi:   #f5c842;
+  --blue-lo:   rgba(232,160,32,0.15);
   --green:     #22c55e;
   --green-bg:  #15803d;
   --cyan:      #22d3ee;
@@ -1198,7 +1198,7 @@ const LANGS = {
 };
 
 const KEY = 'oilcalc_v4';
-let cfg = { pps:0, cash:0, cpu:15, boost:285, lang:'en', accent:null };
+let cfg = { pps:0, cash:0, cpu:15, boost:285, lang:'en', accent:{color:'#e8a020',hi:'#f5c842'} };
 let currentLang = 'en';
 
 function loadCfg() {
